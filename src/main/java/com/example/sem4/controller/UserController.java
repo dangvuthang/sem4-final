@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/")
 public class UserController {
-
 
   @Autowired
   private UserRepository userRepository;
@@ -54,11 +52,6 @@ public class UserController {
     return ResponseEntity.ok(user);
   }
 
-  @PostMapping("/users")
-  public User createUser(@Valid @RequestBody User user) {
-    return userRepository.save(user);
-  }
-
   @PutMapping("/users/{id}")
   public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Long userId, @RequestBody User user) throws ResourceNotFoundException {
     User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
@@ -76,8 +69,8 @@ public class UserController {
     return response;
   }
 
-  @PostMapping("/users/authenticate")
-  public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+  @PostMapping("/users/login")
+  public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
     } catch (AuthenticationException e) {
@@ -88,6 +81,17 @@ public class UserController {
     Map<String, String> response = new HashMap<>();
     response.put("jwt", jwt);
     response.put("email", authenticationRequest.getEmail());
+
+    return ResponseEntity.ok().body(response);
+  }
+
+  @PostMapping("/users/signup")
+  public ResponseEntity<?> signup(@Valid @RequestBody User user) throws Exception {
+    userRepository.save(user);
+    String jwt = jwtUtil.generateToken(user.getEmail());
+    Map<String, String> response = new HashMap<>();
+    response.put("jwt", jwt);
+    response.put("email", user.getEmail());
 
     return ResponseEntity.ok().body(response);
   }
