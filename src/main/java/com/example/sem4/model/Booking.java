@@ -5,7 +5,7 @@
  */
 package com.example.sem4.model;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -40,7 +40,7 @@ public class Booking  {
 
   @NotNull
   @Column(name = "price")
-  private BigInteger price;
+  private BigDecimal price;
   @Column(name = "paid")
   private Boolean paid;
 
@@ -61,7 +61,7 @@ public class Booking  {
     this.id = id;
   }
 
-  public Booking(Long id, Date createdAt, BigInteger price, long quantity) {
+  public Booking(Long id, Date createdAt, BigDecimal price, long quantity) {
     this.id = id;
     this.createdAt = createdAt;
     this.price = price;
@@ -84,11 +84,11 @@ public class Booking  {
     this.createdAt = createdAt;
   }
 
-  public BigInteger getPrice() {
+  public BigDecimal getPrice() {
     return price;
   }
 
-  public void setPrice(BigInteger price) {
+  public void setPrice(BigDecimal price) {
     this.price = price;
   }
 

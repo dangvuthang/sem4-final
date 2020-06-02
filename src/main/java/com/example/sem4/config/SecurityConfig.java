@@ -57,12 +57,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
 
     http.csrf().disable().authorizeRequests()
+//            http.cors().and().authorizeRequests()
             .antMatchers("/api/v1/users/signup").permitAll()
             .antMatchers("/api/v1/users/login").permitAll()
             .anyRequest().authenticated()
+//            .anyRequest().permitAll()
             .and().exceptionHandling().and().sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        http
+//        .authorizeRequests()
+//                .antMatchers("/api/v1/users/login").permitAll()
+//                .and()
+//            .formLogin()
+//                .loginProcessingUrl("/api/v1/users/login")
+//                .usernameParameter("email")
+//                .passwordParameter("password")
+//                .defaultSuccessUrl("/api/v1/admin/users/")
+//                .failureUrl("/login?error")
+//                .and()
+//            .exceptionHandling()
+//                .accessDeniedPage("/403");
   }
 
 }
