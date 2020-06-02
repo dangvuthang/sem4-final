@@ -5,7 +5,7 @@
  */
 package com.example.sem4.model;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -38,11 +38,11 @@ public class Location  {
 
   @NotNull
   @Column(name = "latitude")
-  private BigInteger latitude;
+  private BigDecimal latitude;
 
   @NotNull
   @Column(name = "longitude")
-  private BigInteger longitude;
+  private BigDecimal longitude;
 
   @NotNull
   @Column(name = "address")
@@ -57,7 +57,7 @@ public class Location  {
     this.id = id;
   }
 
-  public Location(Long id, String name, BigInteger latitude, BigInteger longitude, String address) {
+  public Location(Long id, String name, BigDecimal latitude, BigDecimal longitude, String address) {
     this.id = id;
     this.name = name;
     this.latitude = latitude;
@@ -81,19 +81,19 @@ public class Location  {
     this.name = name;
   }
 
-  public BigInteger getLatitude() {
+  public BigDecimal getLatitude() {
     return latitude;
   }
 
-  public void setLatitude(BigInteger latitude) {
+  public void setLatitude(BigDecimal latitude) {
     this.latitude = latitude;
   }
 
-  public BigInteger getLongitude() {
+  public BigDecimal getLongitude() {
     return longitude;
   }
 
-  public void setLongitude(BigInteger longitude) {
+  public void setLongitude(BigDecimal longitude) {
     this.longitude = longitude;
   }
 

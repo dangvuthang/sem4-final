@@ -41,35 +41,40 @@ public class UserController {
   @Autowired
   private JwtUtil jwtUtil;
 
-  @GetMapping("users")
+  @GetMapping("admin/users")
   public List<User> getAllUsers() {
     return userRepository.findAll();
   }
 
-  @GetMapping("/users/{id}")
+  @GetMapping("admin/users/{id}")
   public ResponseEntity<User> getUserById(@PathVariable(name = "id") Long userId) throws ResourceNotFoundException {
     User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
     return ResponseEntity.ok(user);
   }
 
-  @PutMapping("/users/{id}")
-  public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Long userId, @RequestBody User user) throws ResourceNotFoundException {
+  @PutMapping("admin/users/{id}")
+  public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Long userId,@RequestBody User user) throws ResourceNotFoundException {
     User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
-    currentUser.setEmail(user.getEmail());
     currentUser.setName(user.getName());
+    currentUser.setEmail(user.getEmail());
+    currentUser.setPassword(user.getPassword());
+    currentUser.setPhone(user.getPhone());
+    currentUser.setActive(user.getActive());
     return ResponseEntity.ok(userRepository.save(currentUser));
   }
 
-  @DeleteMapping("/users/{id}")
-  public Map<String, Boolean> deleteUser(@PathVariable(name = "id") Long userId) throws ResourceNotFoundException {
-    User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
-    userRepository.delete(currentUser);
-    Map<String, Boolean> response = new HashMap<>();
-    response.put("deleted", Boolean.TRUE);
-    return response;
-  }
-
-  @PostMapping("/users/login")
+  @PutMapping("admin/users/active/{id}")
+    public ResponseEntity<User> activeUser(@PathVariable(name = "id") Long userId) throws ResourceNotFoundException {
+        User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
+        if (currentUser.getActive()) {
+            currentUser.setActive(false);
+        } else {
+            currentUser.setActive(true);
+        }
+        return ResponseEntity.ok(userRepository.save(currentUser));
+    }
+//  @PostMapping(value = "/users/login",consumes = "text/plain")
+  @PostMapping(value = "/users/login")
   public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));

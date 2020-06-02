@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import javax.persistence.CascadeType;
@@ -43,7 +44,7 @@ public class Guide  {
 
   @NotNull
   @Column(name = "rating_average")
-  private BigInteger ratingAverage;
+  private BigDecimal ratingAverage;
   
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
@@ -62,7 +63,7 @@ public class Guide  {
     this.id = id;
   }
 
-  public Guide(Long id, String description, int numberOfRatings, BigInteger ratingAverage) {
+  public Guide(Long id, String description, int numberOfRatings, BigDecimal ratingAverage) {
     this.id = id;
     this.description = description;
     this.numberOfRatings = numberOfRatings;
@@ -93,11 +94,11 @@ public class Guide  {
     this.numberOfRatings = numberOfRatings;
   }
 
-  public BigInteger getRatingAverage() {
+  public BigDecimal getRatingAverage() {
     return ratingAverage;
   }
 
-  public void setRatingAverage(BigInteger ratingAverage) {
+  public void setRatingAverage(BigDecimal ratingAverage) {
     this.ratingAverage = ratingAverage;
   }
 
