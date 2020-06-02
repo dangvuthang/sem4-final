@@ -15,5 +15,5 @@ VALUES (1,'NhaTrangRelaxing.jpg'),(1,'NhaTrang01.jpg'),(1,'NhaTrang02.jpg'),(1,'
 (2,'HoiAnCulture'),(2,'HoiAn01.jpg'),(2,'HoiAn02.jpg'),(2,'HoiAn03.jpg'),(2,'HoiAn04.jpg')
 
 INSERT INTO locations(name,latitude,longitude,is_active)
-VALUES ('Nha Trang Resort',12.24507,109.19432,1)
+VALUES ('Nha Trang Resort',12.24507,109.19432,1),
 ('Hoi An city',15.87944,108.355,1)
