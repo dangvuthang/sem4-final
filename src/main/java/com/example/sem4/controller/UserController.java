@@ -41,12 +41,12 @@ public class UserController {
   @Autowired
   private JwtUtil jwtUtil;
 
-  @GetMapping("admin/users")
+  @GetMapping("users")
   public List<User> getAllUsers() {
     return userRepository.findAll();
   }
 
-  @GetMapping("admin/users/{id}")
+  @GetMapping("users/{id}")
   public ResponseEntity<User> getUserById(@PathVariable(name = "id") Long userId) throws ResourceNotFoundException {
     User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
     return ResponseEntity.ok(user);
