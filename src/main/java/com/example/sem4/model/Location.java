@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "locations")
 
-public class Location  {
+public class Location {
 
   private static final long serialVersionUID = 1L;
   @Id
@@ -49,6 +49,9 @@ public class Location  {
   private String address;
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "locationId")
   private Collection<TourLocation> tourLocationCollection;
+
+  @Column(name = "is_active", columnDefinition = "boolean default true")
+  private boolean isActive;
 
   public Location() {
   }
@@ -113,6 +116,14 @@ public class Location  {
     this.tourLocationCollection = tourLocationCollection;
   }
 
+  public boolean isIsActive() {
+    return isActive;
+  }
+
+  public void setIsActive(boolean isActive) {
+    this.isActive = isActive;
+  }
+
   @Override
   public int hashCode() {
     int hash = 0;
@@ -137,5 +148,5 @@ public class Location  {
   public String toString() {
     return "model.Location[ id=" + id + " ]";
   }
-  
+
 }

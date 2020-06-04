@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "review_tours")
 
-public class ReviewTour  {
+public class ReviewTour {
 
   private static final long serialVersionUID = 1L;
   @Id
@@ -45,14 +45,18 @@ public class ReviewTour  {
   @Column(name = "created_at")
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdAt;
-  
+
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Tour tourId;
-  
+
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private User userId;
+
+  @NotNull
+  @Column(name = "active", columnDefinition = "boolean default true")
+  private boolean active;
 
   public ReviewTour() {
   }
@@ -116,6 +120,14 @@ public class ReviewTour  {
     this.userId = userId;
   }
 
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
+  }
+
   @Override
   public int hashCode() {
     int hash = 0;
@@ -140,5 +152,5 @@ public class ReviewTour  {
   public String toString() {
     return "model.ReviewTour[ id=" + id + " ]";
   }
-  
+
 }

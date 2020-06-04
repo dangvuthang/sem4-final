@@ -45,14 +45,18 @@ public class ReviewGuide {
   @Column(name = "created_at")
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdAt;
-  
+
   @JoinColumn(name = "guide_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Guide guideId;
-  
+
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private User userId;
+
+  @NotNull
+  @Column(name = "active", columnDefinition = "boolean default true")
+  private boolean active;
 
   public ReviewGuide() {
   }
@@ -114,6 +118,14 @@ public class ReviewGuide {
 
   public void setUserId(User userId) {
     this.userId = userId;
+  }
+
+  public boolean isActive() {
+    return active;
+  }
+
+  public void setActive(boolean active) {
+    this.active = active;
   }
 
   @Override

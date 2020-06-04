@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
@@ -70,18 +71,18 @@ public class Tour {
   private String summary;
 
   @NotNull
-  @Column(name = "description")
+  @Column(name = "description",  columnDefinition = "TEXT")
   private String description;
 
   @NotNull
-  @Column(name = "active")
+  @Column(name = "active", columnDefinition = "boolean default true")
   private boolean active;
 
   @Column(name = "tour_image_cover")
   private String tourImageCover;
 
   @Column(name = "rating_average")
-  private BigInteger ratingAverage;
+  private BigDecimal ratingAverage;
 
   @Column(name = "number_of_ratings")
   private BigInteger numberOfRatings;
@@ -222,11 +223,11 @@ public class Tour {
     this.tourImageCover = tourImageCover;
   }
 
-  public BigInteger getRatingAverage() {
+  public BigDecimal getRatingAverage() {
     return ratingAverage;
   }
 
-  public void setRatingAverage(BigInteger ratingAverage) {
+  public void setRatingAverage(BigDecimal ratingAverage) {
     this.ratingAverage = ratingAverage;
   }
 

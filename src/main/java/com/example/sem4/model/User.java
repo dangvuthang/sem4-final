@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -23,7 +24,9 @@ import javax.validation.constraints.NotNull;
  * @author July
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = {
+  @UniqueConstraint(columnNames = {"email"})
+})
 public class User {
 
   private static final long serialVersionUID = 1L;

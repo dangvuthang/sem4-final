@@ -25,7 +25,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "bookings")
-public class Booking  {
+public class Booking {
 
   private static final long serialVersionUID = 1L;
   @Id
@@ -41,18 +41,25 @@ public class Booking  {
   @NotNull
   @Column(name = "price")
   private BigDecimal price;
+
   @Column(name = "paid")
   private Boolean paid;
 
   @NotNull
   @Column(name = "quantity")
   private long quantity;
+
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Tour tourId;
+
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private User userId;
+
+  @NotNull
+  @Column(name = "is_cancelled", columnDefinition = "boolean default true")
+  private boolean isCancelled;
 
   public Booking() {
   }
@@ -124,6 +131,14 @@ public class Booking  {
     this.userId = userId;
   }
 
+  public boolean isIsCancelled() {
+    return isCancelled;
+  }
+
+  public void setIsCancelled(boolean isCancelled) {
+    this.isCancelled = isCancelled;
+  }
+
   @Override
   public int hashCode() {
     int hash = 0;
@@ -148,5 +163,5 @@ public class Booking  {
   public String toString() {
     return "model.Booking[ id=" + id + " ]";
   }
-  
+
 }
