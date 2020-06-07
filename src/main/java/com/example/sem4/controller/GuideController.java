@@ -41,7 +41,7 @@ public class GuideController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("/admin/guides")
+    @GetMapping("/guides")
     public List<Guide> getAllGuides() {
         return guideRepository.findAll();
     }
