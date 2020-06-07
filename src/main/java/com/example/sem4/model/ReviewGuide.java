@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -104,6 +105,7 @@ public class ReviewGuide {
     this.createdAt = createdAt;
   }
 
+  @JsonBackReference
   public Guide getGuideId() {
     return guideId;
   }
@@ -112,6 +114,7 @@ public class ReviewGuide {
     this.guideId = guideId;
   }
 
+  @JsonBackReference
   public User getUserId() {
     return userId;
   }

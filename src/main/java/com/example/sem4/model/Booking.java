@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
@@ -115,6 +116,7 @@ public class Booking {
     this.quantity = quantity;
   }
 
+  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }
@@ -123,6 +125,7 @@ public class Booking {
     this.tourId = tourId;
   }
 
+  @JsonBackReference
   public User getUserId() {
     return userId;
   }

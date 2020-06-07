@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Collection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -64,6 +65,7 @@ public class TourType  {
     this.name = name;
   }
 
+  @JsonManagedReference
   public Collection<Tour> getTourCollection() {
     return tourCollection;
   }

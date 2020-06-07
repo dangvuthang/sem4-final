@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -65,6 +66,7 @@ public class Role {
     this.name = name;
   }
 
+  @JsonManagedReference
   public Collection<User> getUserCollection() {
     return userCollection;
   }

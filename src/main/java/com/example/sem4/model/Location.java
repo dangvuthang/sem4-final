@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
 import java.util.Collection;
 import javax.persistence.CascadeType;
@@ -108,6 +109,7 @@ public class Location {
     this.address = address;
   }
 
+  @JsonManagedReference
   public Collection<TourLocation> getTourLocationCollection() {
     return tourLocationCollection;
   }

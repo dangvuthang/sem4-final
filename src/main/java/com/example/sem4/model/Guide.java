@@ -5,8 +5,9 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -26,7 +27,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "guides")
-public class Guide  {
+public class Guide {
 
   private static final long serialVersionUID = 1L;
   @Id
@@ -45,14 +46,14 @@ public class Guide  {
   @NotNull
   @Column(name = "rating_average")
   private BigDecimal ratingAverage;
-  
+
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private User userId;
-  
+
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "guideId")
   private Collection<ReviewGuide> reviewGuideCollection;
-  
+
   @OneToMany(mappedBy = "guideId")
   private Collection<Tour> tourCollection;
 
@@ -102,6 +103,7 @@ public class Guide  {
     this.ratingAverage = ratingAverage;
   }
 
+  @JsonBackReference
   public User getUserId() {
     return userId;
   }
@@ -110,6 +112,7 @@ public class Guide  {
     this.userId = userId;
   }
 
+  @JsonManagedReference
   public Collection<ReviewGuide> getReviewGuideCollection() {
     return reviewGuideCollection;
   }
@@ -118,6 +121,7 @@ public class Guide  {
     this.reviewGuideCollection = reviewGuideCollection;
   }
 
+  @JsonManagedReference
   public Collection<Tour> getTourCollection() {
     return tourCollection;
   }
@@ -150,5 +154,5 @@ public class Guide  {
   public String toString() {
     return "model.Guide[ id=" + id + " ]";
   }
-  
+
 }

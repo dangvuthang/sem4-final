@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,23 +25,23 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "tour_locations")
-public class TourLocation  {
+public class TourLocation {
 
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
-  
+
   @NotNull
   @Column(name = "date")
   @Temporal(TemporalType.TIMESTAMP)
   private Date date;
-  
+
   @JoinColumn(name = "location_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Location locationId;
-  
+
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Tour tourId;
@@ -73,6 +74,7 @@ public class TourLocation  {
     this.date = date;
   }
 
+  @JsonBackReference
   public Location getLocationId() {
     return locationId;
   }
@@ -81,6 +83,7 @@ public class TourLocation  {
     this.locationId = locationId;
   }
 
+  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }
@@ -113,5 +116,5 @@ public class TourLocation  {
   public String toString() {
     return "model.TourLocation[ id=" + id + " ]";
   }
-  
+
 }

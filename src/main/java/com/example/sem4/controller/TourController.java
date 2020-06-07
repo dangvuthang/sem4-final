@@ -43,7 +43,7 @@ public class TourController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("admin/tours")
+    @GetMapping("tours")
     public List<Tour> getAllTours() {
         return tourRepository.findAll();
     }

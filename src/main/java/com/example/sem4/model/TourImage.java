@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,6 +67,7 @@ public class TourImage  {
     this.imageUrl = imageUrl;
   }
 
+  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }

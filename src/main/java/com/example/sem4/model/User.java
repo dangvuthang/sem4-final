@@ -5,6 +5,8 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -143,7 +145,9 @@ public class User {
   public void setName(String name) {
     this.name = name;
   }
-
+  
+  
+@JsonManagedReference
   public Collection<Guide> getGuideCollection() {
     return guideCollection;
   }
@@ -151,7 +155,7 @@ public class User {
   public void setGuideCollection(Collection<Guide> guideCollection) {
     this.guideCollection = guideCollection;
   }
-
+@JsonManagedReference
   public Collection<ReviewTour> getReviewTourCollection() {
     return reviewTourCollection;
   }
@@ -159,7 +163,7 @@ public class User {
   public void setReviewTourCollection(Collection<ReviewTour> reviewTourCollection) {
     this.reviewTourCollection = reviewTourCollection;
   }
-
+@JsonManagedReference
   public Collection<ReviewGuide> getReviewGuideCollection() {
     return reviewGuideCollection;
   }
@@ -167,7 +171,7 @@ public class User {
   public void setReviewGuideCollection(Collection<ReviewGuide> reviewGuideCollection) {
     this.reviewGuideCollection = reviewGuideCollection;
   }
-
+@JsonManagedReference
   public Collection<Booking> getBookingCollection() {
     return bookingCollection;
   }
@@ -176,6 +180,7 @@ public class User {
     this.bookingCollection = bookingCollection;
   }
 
+  @JsonBackReference
   public Role getRoleId() {
     return roleId;
   }
