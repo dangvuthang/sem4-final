@@ -6,19 +6,14 @@
 package com.example.sem4.controller;
 
 import com.example.sem4.exception.ResourceNotFoundException;
-import com.example.sem4.model.Role;
 import com.example.sem4.model.Tour;
-import com.example.sem4.model.TourLocation;
 import com.example.sem4.repository.TourLocationRepository;
 import com.example.sem4.repository.TourRepository;
 import com.example.sem4.util.JwtUtil;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,6 +46,7 @@ public class TourController {
     @GetMapping("/admin/tours/{id}")
     public ResponseEntity<Tour> getTourById(@PathVariable(name = "id") Long tourId) throws ResourceNotFoundException {
         Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour with a given id: " + tourId));
+        System.out.println("HELLO WORLD");
         return ResponseEntity.ok(tour);
     }
 
