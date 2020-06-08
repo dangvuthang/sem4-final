@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author MyPC
  */
-public interface TourLocationRepository extends JpaRepository<TourLocation, Long> {
+public interface TourLocationRepository extends JpaRepository<TourLocation, Integer> {
     
 }

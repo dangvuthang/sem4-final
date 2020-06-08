@@ -48,7 +48,7 @@ public class RoleController {
     }
 
     @GetMapping("admin/roles/{id}")
-    public ResponseEntity<Role> getRoleById(@PathVariable(name = "id") Long roleId) throws ResourceNotFoundException {
+    public ResponseEntity<Role> getRoleById(@PathVariable(name = "id") Integer roleId) throws ResourceNotFoundException {
         Role role = roleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("Can not found Role with a given id: " + roleId));
         return ResponseEntity.ok(role);
     }
@@ -59,7 +59,7 @@ public class RoleController {
     }
 
     @PutMapping("admin/roles/{id}")
-    public ResponseEntity<Role> updateRoleById(@PathVariable(name = "id") Long roleId, @RequestBody Role role) throws ResourceNotFoundException {
+    public ResponseEntity<Role> updateRoleById(@PathVariable(name = "id") Integer roleId, @RequestBody Role role) throws ResourceNotFoundException {
         Role currentRole = roleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("Can not found Role with a given id: " + roleId));
 //    currentUser.setEmail(user.getEmail());
         currentRole.setName(role.getName());
@@ -67,7 +67,7 @@ public class RoleController {
     }
 
     @DeleteMapping("admin/roles/{id}")
-    public Map<String, Boolean> deleteRole(@PathVariable(name = "id") Long roleId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteRole(@PathVariable(name = "id") Integer roleId) throws ResourceNotFoundException {
         Role currentRole = roleRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("Can not found Role with a given id: " + roleId));
         Map<String, Boolean> response = new HashMap<>();
         for (User user : userRepository.findAll()) {

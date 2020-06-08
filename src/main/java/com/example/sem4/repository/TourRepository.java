@@ -14,7 +14,7 @@ import org.springframework.data.jpa.repository.Query;
  *
  * @author MyPC
  */
-public interface TourRepository extends JpaRepository<Tour, Long> {
+public interface TourRepository extends JpaRepository<Tour, Integer> {
 
   @Query("SELECT t FROM Tour t")
   List<Tour> findAllTours();

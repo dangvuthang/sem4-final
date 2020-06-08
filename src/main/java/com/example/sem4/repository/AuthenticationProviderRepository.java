@@ -5,13 +5,15 @@
  */
 package com.example.sem4.repository;
 
-import com.example.sem4.model.Role;
+import com.example.sem4.model.AuthenticationProvider;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  *
- * @author MyPC
+ * @author July
  */
-public interface RoleRepository extends JpaRepository<Role, Integer> {
-    
+public interface AuthenticationProviderRepository extends JpaRepository<AuthenticationProvider, Integer> {
+
+  Optional<AuthenticationProvider> findByProviderKey(String providerKey);
 }

@@ -36,7 +36,7 @@ public class ReviewGuideController {
     }
 
     @GetMapping("/admin/review_guides/{id}")
-    public ResponseEntity<ReviewGuide> getReviewGuideById(@PathVariable(name = "id") Long reviewGuideId) throws ResourceNotFoundException {
+    public ResponseEntity<ReviewGuide> getReviewGuideById(@PathVariable(name = "id") Integer reviewGuideId) throws ResourceNotFoundException {
         ReviewGuide reviewGuide = reviewGuideRepository.findById(reviewGuideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Review Guide with a given id: " + reviewGuideId));
         return ResponseEntity.ok(reviewGuide);
     }

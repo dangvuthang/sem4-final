@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author MyPC
  */
-public interface BookingRepository extends JpaRepository<Booking, Long>{
+public interface BookingRepository extends JpaRepository<Booking, Integer>{
     
 }

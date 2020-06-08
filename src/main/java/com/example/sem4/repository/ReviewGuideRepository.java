@@ -8,10 +8,11 @@ package com.example.sem4.repository;
 import com.example.sem4.model.ReviewGuide;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+
 /**
  *
  * @author MyPC
  */
-public interface ReviewGuideRepository extends JpaRepository<ReviewGuide, Long> {
+public interface ReviewGuideRepository extends JpaRepository<ReviewGuide, Integer> {
     
 }

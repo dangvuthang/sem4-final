@@ -54,7 +54,7 @@ public class TourLocationController {
     }
 
     @GetMapping("/admin/tour_locations/{id}")
-    public ResponseEntity<TourLocation> getTourLocationById(@PathVariable(name = "id") Long tourLocationId) throws ResourceNotFoundException {
+    public ResponseEntity<TourLocation> getTourLocationById(@PathVariable(name = "id") Integer tourLocationId) throws ResourceNotFoundException {
         TourLocation tourLocation = tourLocationRepository.findById(tourLocationId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Location with a given id: " + tourLocationId));
         return ResponseEntity.ok(tourLocation);
     }
@@ -65,7 +65,7 @@ public class TourLocationController {
     }
 
     @PutMapping("admin/tour_locations/{id}")
-    public ResponseEntity<TourLocation> updateTourLocationById(@PathVariable(name = "id") Long tourLocationId, @RequestBody TourLocation tourLocation) throws ResourceNotFoundException {
+    public ResponseEntity<TourLocation> updateTourLocationById(@PathVariable(name = "id") Integer tourLocationId, @RequestBody TourLocation tourLocation) throws ResourceNotFoundException {
         TourLocation currentTourLocation = tourLocationRepository.findById(tourLocationId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Location with a given id: " + tourLocationId));
         currentTourLocation.setDate(tourLocation.getDate());
         Tour updateTour = tourRepository.findById(tourLocation.getTourId().getId()).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour with a given id: " + tourLocation.getTourId().getId()));
@@ -76,7 +76,7 @@ public class TourLocationController {
     }
 
     @DeleteMapping("admin/tour_locations/{id}")
-    public Map<String, Boolean> deleteTourLocation(@PathVariable(name = "id") Long tourLocationId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteTourLocation(@PathVariable(name = "id") Integer tourLocationId) throws ResourceNotFoundException {
         TourLocation currentTourLocation = tourLocationRepository.findById(tourLocationId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Location with a given id: " + tourLocationId));
         Map<String, Boolean> response = new HashMap<>();
         for (Tour tour : tourRepository.findAll()) {

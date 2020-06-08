@@ -32,17 +32,15 @@ import javax.validation.constraints.NotNull;
 })
 public class User {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "email")
   private String email;
 
-  @NotNull
   @Column(name = "password")
   private String password;
 
@@ -52,7 +50,6 @@ public class User {
   @Column(name = "avatar_image")
   private String avatarImage;
 
-  @NotNull
   @Column(name = "phone")
   private String phone;
 
@@ -87,11 +84,11 @@ public class User {
   public User() {
   }
 
-  public User(Long id) {
+  public User(Integer id) {
     this.id = id;
   }
 
-  public User(Long id, String email, String password, String phone, String name) {
+  public User(Integer id, String email, String password, String phone, String name) {
     this.id = id;
     this.email = email;
     this.password = password;
@@ -99,11 +96,11 @@ public class User {
     this.name = name;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

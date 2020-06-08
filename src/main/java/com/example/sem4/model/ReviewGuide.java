@@ -28,11 +28,10 @@ import javax.validation.constraints.NotNull;
 
 public class ReviewGuide {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "review")
@@ -62,22 +61,22 @@ public class ReviewGuide {
   public ReviewGuide() {
   }
 
-  public ReviewGuide(Long id) {
+  public ReviewGuide(Integer id) {
     this.id = id;
   }
 
-  public ReviewGuide(Long id, String review, int rating, Date createdAt) {
+  public ReviewGuide(Integer id, String review, int rating, Date createdAt) {
     this.id = id;
     this.review = review;
     this.rating = rating;
     this.createdAt = createdAt;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

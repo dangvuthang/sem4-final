@@ -1,9 +1,9 @@
 INSERT INTO roles("name") VALUES ('Admin'),('Guide'),('User');
 
 INSERT INTO users("name",email,password,phone,avatar_image,active,role_id) 
-VALUES ('user1','user1@gmail.com','123','7778523610','user1.jpg',true,1),
-('user2','user2@gmail.com','123','7778523523','user2.jpg',true,2),
-('user3','user3@gmail.com','123','7778523672','user3.jpg',true,3);
+VALUES ('user1','user1@gmail.com','123456','7778523610','user1.jpg',true,1),
+('user2','user2@gmail.com','123456','7778523523','user2.jpg',true,2),
+('user3','user3@gmail.com','123456','7778523672','user3.jpg',true,3);
 
 INSERT INTO guides(description,number_of_ratings,rating_average,user_id) 
 VALUES ('Good for tour guide knowledge',250,4.5,2);

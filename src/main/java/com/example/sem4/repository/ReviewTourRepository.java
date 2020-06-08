@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author MyPC
  */
-public interface ReviewTourRepository extends JpaRepository<ReviewTour, Long> {
+public interface ReviewTourRepository extends JpaRepository<ReviewTour, Integer> {
     
 }

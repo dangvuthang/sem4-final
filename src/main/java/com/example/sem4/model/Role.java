@@ -26,11 +26,10 @@ import javax.validation.constraints.NotNull;
 
 public class Role {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "name")
@@ -43,20 +42,20 @@ public class Role {
   public Role() {
   }
 
-  public Role(Long id) {
+  public Role(Integer id) {
     this.id = id;
   }
 
-  public Role(Long id, String name) {
+  public Role(Integer id, String name) {
     this.id = id;
     this.name = name;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

@@ -28,11 +28,10 @@ import javax.validation.constraints.NotNull;
 
 public class Location {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "name")
@@ -60,11 +59,11 @@ public class Location {
   public Location() {
   }
 
-  public Location(Long id) {
+  public Location(Integer id) {
     this.id = id;
   }
 
-  public Location(Long id, String name, BigDecimal latitude, BigDecimal longitude, String address) {
+  public Location(Integer id, String name, BigDecimal latitude, BigDecimal longitude, String address) {
     this.id = id;
     this.name = name;
     this.latitude = latitude;
@@ -72,11 +71,11 @@ public class Location {
     this.address = address;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

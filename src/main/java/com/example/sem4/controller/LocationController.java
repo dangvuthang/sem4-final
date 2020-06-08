@@ -50,7 +50,7 @@ public class LocationController {
     }
 
     @GetMapping("/admin/locations/{id}")
-    public ResponseEntity<Location> getLocationById(@PathVariable(name = "id") Long locationId) throws ResourceNotFoundException {
+    public ResponseEntity<Location> getLocationById(@PathVariable(name = "id") Integer locationId) throws ResourceNotFoundException {
         Location location = locationRepository.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Can not found Location with a given id: " + locationId));
         return ResponseEntity.ok(location);
     }
@@ -61,7 +61,7 @@ public class LocationController {
     }
 
     @PutMapping("admin/locations/{id}")
-    public ResponseEntity<Location> updateLocationById(@PathVariable(name = "id") Long locationId, @RequestBody Location location) throws ResourceNotFoundException {
+    public ResponseEntity<Location> updateLocationById(@PathVariable(name = "id") Integer locationId, @RequestBody Location location) throws ResourceNotFoundException {
         Location currentLocation = locationRepository.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Can not found Location with a given id: " + locationId));
         currentLocation.setName(location.getName());
         currentLocation.setLongitude(location.getLongitude());
@@ -71,7 +71,7 @@ public class LocationController {
     }
 
     @DeleteMapping("admin/locations/{id}")
-    public Map<String, Boolean> deleteLocation(@PathVariable(name = "id") Long locationId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteLocation(@PathVariable(name = "id") Integer locationId) throws ResourceNotFoundException {
         Location currentLocation = locationRepository.findById(locationId).orElseThrow(() -> new ResourceNotFoundException("Can not found Location with a given id: " + locationId));
         Map<String, Boolean> response = new HashMap<>();
         for (TourLocation tourLocation : tourLocationRepository.findAll()) {

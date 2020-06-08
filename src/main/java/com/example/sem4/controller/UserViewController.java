@@ -50,13 +50,13 @@ public class UserViewController {
     }
 
     @GetMapping("users/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable(name = "id") Long userId) throws ResourceNotFoundException {
+    public ResponseEntity<User> getUserById(@PathVariable(name = "id") Integer userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
         return ResponseEntity.ok(user);
     }
 
     @PutMapping("admin/users/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Long userId, @RequestBody User user) throws ResourceNotFoundException {
+    public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Integer userId, @RequestBody User user) throws ResourceNotFoundException {
         User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
         currentUser.setName(user.getName());
         currentUser.setEmail(user.getEmail());
@@ -67,7 +67,7 @@ public class UserViewController {
     }
 
     @PutMapping("admin/users/active/{id}")
-    public ResponseEntity<User> activeUser(@PathVariable(name = "id") Long userId) throws ResourceNotFoundException {
+    public ResponseEntity<User> activeUser(@PathVariable(name = "id") Integer userId) throws ResourceNotFoundException {
         User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
         if (currentUser.getActive()) {
             currentUser.setActive(false);

@@ -34,11 +34,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "tours")
 public class Tour {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "name")
@@ -117,11 +116,11 @@ public class Tour {
   public Tour() {
   }
 
-  public Tour(Long id) {
+  public Tour(Integer id) {
     this.id = id;
   }
 
-  public Tour(Long id, String name, Date startDate, Date endDate, int duration, int maxGroupSize, BigInteger price, String summary, String description, boolean active) {
+  public Tour(Integer id, String name, Date startDate, Date endDate, int duration, int maxGroupSize, BigInteger price, String summary, String description, boolean active) {
     this.id = id;
     this.name = name;
     this.startDate = startDate;
@@ -134,11 +133,11 @@ public class Tour {
     this.active = active;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

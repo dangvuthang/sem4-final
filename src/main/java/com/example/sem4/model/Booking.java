@@ -28,11 +28,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "bookings")
 public class Booking {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "created_at")
@@ -48,7 +47,7 @@ public class Booking {
 
   @NotNull
   @Column(name = "quantity")
-  private long quantity;
+  private Integer quantity;
 
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
@@ -65,22 +64,22 @@ public class Booking {
   public Booking() {
   }
 
-  public Booking(Long id) {
+  public Booking(Integer id) {
     this.id = id;
   }
 
-  public Booking(Long id, Date createdAt, BigDecimal price, long quantity) {
+  public Booking(Integer id, Date createdAt, BigDecimal price, Integer quantity) {
     this.id = id;
     this.createdAt = createdAt;
     this.price = price;
     this.quantity = quantity;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
@@ -108,11 +107,11 @@ public class Booking {
     this.paid = paid;
   }
 
-  public long getQuantity() {
+  public Integer getQuantity() {
     return quantity;
   }
 
-  public void setQuantity(long quantity) {
+  public void setQuantity(Integer quantity) {
     this.quantity = quantity;
   }
 

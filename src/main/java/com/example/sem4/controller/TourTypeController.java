@@ -47,7 +47,7 @@ public class TourTypeController {
     }
 
     @GetMapping("/admin/tour_types/{id}")
-    public ResponseEntity<TourType> getTourTypeById(@PathVariable(name = "id") Long tourTypeId) throws ResourceNotFoundException {
+    public ResponseEntity<TourType> getTourTypeById(@PathVariable(name = "id") Integer tourTypeId) throws ResourceNotFoundException {
         TourType tourType = tourTypeRepository.findById(tourTypeId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Type with a given id: " + tourTypeId));
         return ResponseEntity.ok(tourType);
     }
@@ -58,14 +58,14 @@ public class TourTypeController {
     }
 
     @PutMapping("admin/tour_types/{id}")
-    public ResponseEntity<TourType> updateTourTypeById(@PathVariable(name = "id") Long tourTypeId, @RequestBody TourType tourType) throws ResourceNotFoundException {
+    public ResponseEntity<TourType> updateTourTypeById(@PathVariable(name = "id") Integer tourTypeId, @RequestBody TourType tourType) throws ResourceNotFoundException {
         TourType currentTourType= tourTypeRepository.findById(tourTypeId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Type with a given id: " + tourTypeId));
         currentTourType.setName(tourType.getName());
         return ResponseEntity.ok(tourTypeRepository.save(currentTourType));
     }
 
     @DeleteMapping("admin/tour_types/{id}")
-    public Map<String, Boolean> deleteTourType(@PathVariable(name = "id") Long tourTypeId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteTourType(@PathVariable(name = "id") Integer tourTypeId) throws ResourceNotFoundException {
         TourType currentTourType = tourTypeRepository.findById(tourTypeId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Type with a given id: " + tourTypeId));
         Map<String, Boolean> response = new HashMap<>();
         for (Tour tour : tourRepository.findAll()) {

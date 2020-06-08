@@ -44,7 +44,7 @@ public class TourController {
     }
 
     @GetMapping("/admin/tours/{id}")
-    public ResponseEntity<Tour> getTourById(@PathVariable(name = "id") Long tourId) throws ResourceNotFoundException {
+    public ResponseEntity<Tour> getTourById(@PathVariable(name = "id") Integer tourId) throws ResourceNotFoundException {
         Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour with a given id: " + tourId));
         System.out.println("HELLO WORLD");
         return ResponseEntity.ok(tour);
@@ -56,7 +56,7 @@ public class TourController {
     }
 
     @PutMapping("admin/tours/{id}")
-    public ResponseEntity<Tour> updateTourById(@PathVariable(name = "id") Long tourId, @RequestBody Tour tour) throws ResourceNotFoundException {
+    public ResponseEntity<Tour> updateTourById(@PathVariable(name = "id") Integer tourId, @RequestBody Tour tour) throws ResourceNotFoundException {
         Tour currentTour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found Role with a given id: " + tourId));
         currentTour.setDescription(tour.getDescription());
         currentTour.setDuration(tour.getDuration());
@@ -72,7 +72,7 @@ public class TourController {
     }
 
     @PutMapping("admin/tours/active/{id}")
-    public ResponseEntity<Tour> activeTour(@PathVariable(name = "id") Long tourId) throws ResourceNotFoundException {
+    public ResponseEntity<Tour> activeTour(@PathVariable(name = "id") Integer tourId) throws ResourceNotFoundException {
         Tour currentTour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found Role with a given id: " + tourId));
         if (currentTour.getActive()) {
             currentTour.setActive(false);

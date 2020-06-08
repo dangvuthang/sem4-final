@@ -5,7 +5,6 @@
  */
 package com.example.sem4.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -21,7 +20,6 @@ import javax.validation.constraints.NotNull;
 @Table(name = "authentication_providers")
 public class AuthenticationProvider {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @NotNull
   private String providerKey;

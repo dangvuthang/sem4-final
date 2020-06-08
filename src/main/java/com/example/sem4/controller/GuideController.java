@@ -47,7 +47,7 @@ public class GuideController {
     }
 
     @GetMapping("/admin/guides/{id}")
-    public ResponseEntity<Guide> getGuideById(@PathVariable(name = "id") Long guideId) throws ResourceNotFoundException {
+    public ResponseEntity<Guide> getGuideById(@PathVariable(name = "id") Integer guideId) throws ResourceNotFoundException {
         Guide guide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
         return ResponseEntity.ok(guide);
     }
@@ -58,14 +58,14 @@ public class GuideController {
     }
 
     @PutMapping("admin/guides/{id}")
-    public ResponseEntity<Guide> updateGuideById(@PathVariable(name = "id") Long guideId, @RequestBody Guide guide) throws ResourceNotFoundException {
+    public ResponseEntity<Guide> updateGuideById(@PathVariable(name = "id") Integer guideId, @RequestBody Guide guide) throws ResourceNotFoundException {
         Guide currentGuide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
         currentGuide.setDescription(guide.getDescription());
         return ResponseEntity.ok(guideRepository.save(currentGuide));
     }
 
     @DeleteMapping("admin/guides/{id}")
-    public Map<String, Boolean> deleteGuide(@PathVariable(name = "id") Long guideId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteGuide(@PathVariable(name = "id") Integer guideId) throws ResourceNotFoundException {
         Guide currentGuide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
         Map<String, Boolean> response = new HashMap<>();
         for (User user : userRepository.findAll()) {

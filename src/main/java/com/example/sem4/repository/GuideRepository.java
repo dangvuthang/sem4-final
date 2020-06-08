@@ -12,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author MyPC
  */
-public interface GuideRepository extends JpaRepository<Guide, Long> {
+public interface GuideRepository extends JpaRepository<Guide, Integer> {
     
 }

@@ -47,7 +47,7 @@ public class TourImageController {
     }
 
     @GetMapping("/admin/tour_images/{id}")
-    public ResponseEntity<TourImage> getTourImageById(@PathVariable(name = "id") Long tourImageId) throws ResourceNotFoundException {
+    public ResponseEntity<TourImage> getTourImageById(@PathVariable(name = "id") Integer tourImageId) throws ResourceNotFoundException {
         TourImage tourImage = tourImageRepository.findById(tourImageId).orElseThrow(() -> new ResourceNotFoundException("Can not found Tour Image with a given id: " + tourImageId));
         return ResponseEntity.ok(tourImage);
     }
@@ -58,14 +58,14 @@ public class TourImageController {
     }
 
     @PutMapping("admin/tour_images/{id}")
-    public ResponseEntity<TourImage> updateTourImageById(@PathVariable(name = "id") Long tourImageId, @RequestBody TourImage tourImage) throws ResourceNotFoundException {
+    public ResponseEntity<TourImage> updateTourImageById(@PathVariable(name = "id") Integer tourImageId, @RequestBody TourImage tourImage) throws ResourceNotFoundException {
         TourImage currentTourImage= tourImageRepository.findById(tourImageId).orElseThrow(() -> new ResourceNotFoundException("Can not found TourImage with a given id: " + tourImageId));
         currentTourImage.setImageUrl(tourImage.getImageUrl());
         return ResponseEntity.ok(tourImageRepository.save(currentTourImage));
     }
 
     @DeleteMapping("admin/tour_images/{id}")
-    public Map<String, Boolean> deleteTourImage(@PathVariable(name = "id") Long roleId) throws ResourceNotFoundException {
+    public Map<String, Boolean> deleteTourImage(@PathVariable(name = "id") Integer roleId) throws ResourceNotFoundException {
         TourImage currentTourImage = tourImageRepository.findById(roleId).orElseThrow(() -> new ResourceNotFoundException("Can not found TourImage with a given id: " + roleId));
         Map<String, Boolean> response = new HashMap<>();
         for (Tour tour : tourRepository.findAll()) {

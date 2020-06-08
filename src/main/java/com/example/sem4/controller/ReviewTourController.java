@@ -36,7 +36,7 @@ public class ReviewTourController {
     }
 
     @GetMapping("/admin/review_tours/{id}")
-    public ResponseEntity<ReviewTour> getReviewTourById(@PathVariable(name = "id") Long reviewTourId) throws ResourceNotFoundException {
+    public ResponseEntity<ReviewTour> getReviewTourById(@PathVariable(name = "id") Integer reviewTourId) throws ResourceNotFoundException {
         ReviewTour reviewTour = reviewTourRepository.findById(reviewTourId).orElseThrow(() -> new ResourceNotFoundException("Can not found Review Tour with a given id: " + reviewTourId));
         return ResponseEntity.ok(reviewTour);
     }

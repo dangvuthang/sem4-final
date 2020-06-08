@@ -36,7 +36,7 @@ public class BookingController {
     }
 
     @GetMapping("admin/bookings/{id}")
-    public ResponseEntity<Booking> getBookingById(@PathVariable(name = "id") Long bookingId) throws ResourceNotFoundException {
+    public ResponseEntity<Booking> getBookingById(@PathVariable(name = "id") Integer bookingId) throws ResourceNotFoundException {
         Booking booking = bookingRepository.findById(bookingId).orElseThrow(() -> new ResourceNotFoundException("Can not found booking with a given id: " + bookingId));
         return ResponseEntity.ok(booking);
     }

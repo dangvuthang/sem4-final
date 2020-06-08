@@ -25,11 +25,10 @@ import javax.validation.constraints.NotNull;
 
 public class TourImage {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "image_url")
@@ -42,20 +41,20 @@ public class TourImage {
   public TourImage() {
   }
 
-  public TourImage(Long id) {
+  public TourImage(Integer id) {
     this.id = id;
   }
 
-  public TourImage(Long id, String imageUrl) {
+  public TourImage(Integer id, String imageUrl) {
     this.id = id;
     this.imageUrl = imageUrl;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

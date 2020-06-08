@@ -30,11 +30,10 @@ import javax.validation.constraints.NotNull;
 @Table(name = "guides")
 public class Guide {
 
-  private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
-  private Long id;
+  private Integer id;
 
   @NotNull
   @Column(name = "description")
@@ -63,22 +62,22 @@ public class Guide {
   public Guide() {
   }
 
-  public Guide(Long id) {
+  public Guide(Integer id) {
     this.id = id;
   }
 
-  public Guide(Long id, String description, int numberOfRatings, BigDecimal ratingAverage) {
+  public Guide(Integer id, String description, int numberOfRatings, BigDecimal ratingAverage) {
     this.id = id;
     this.description = description;
     this.numberOfRatings = numberOfRatings;
     this.ratingAverage = ratingAverage;
   }
 
-  public Long getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 
