@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -48,6 +49,8 @@ public class Location {
   @NotNull
   @Column(name = "address")
   private String address;
+
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "locationId")
   private Collection<TourLocation> tourLocationCollection;
 
@@ -109,7 +112,6 @@ public class Location {
     this.address = address;
   }
 
-  @JsonManagedReference
   public Collection<TourLocation> getTourLocationCollection() {
     return tourLocationCollection;
   }

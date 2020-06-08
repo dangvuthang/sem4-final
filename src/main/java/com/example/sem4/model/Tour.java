@@ -6,6 +6,7 @@
 package com.example.sem4.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -89,12 +90,15 @@ public class Tour {
   @Column(name = "number_of_ratings")
   private BigInteger numberOfRatings;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "tourId")
   private Collection<ReviewTour> reviewTourCollection;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "tourId")
   private Collection<TourLocation> tourLocationCollection;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "tourId")
   private Collection<Booking> bookingCollection;
 
@@ -106,6 +110,7 @@ public class Tour {
   @ManyToOne
   private TourType tourTypeId;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "tourId")
   private Collection<TourImage> tourImageCollection;
 
@@ -241,7 +246,6 @@ public class Tour {
     this.numberOfRatings = numberOfRatings;
   }
 
-  @JsonManagedReference
   public Collection<ReviewTour> getReviewTourCollection() {
     return reviewTourCollection;
   }
@@ -250,7 +254,6 @@ public class Tour {
     this.reviewTourCollection = reviewTourCollection;
   }
 
-  @JsonManagedReference
   public Collection<TourLocation> getTourLocationCollection() {
     return tourLocationCollection;
   }
@@ -259,7 +262,6 @@ public class Tour {
     this.tourLocationCollection = tourLocationCollection;
   }
 
-  @JsonManagedReference
   public Collection<Booking> getBookingCollection() {
     return bookingCollection;
   }
@@ -268,7 +270,6 @@ public class Tour {
     this.bookingCollection = bookingCollection;
   }
 
-  @JsonBackReference
   public Guide getGuideId() {
     return guideId;
   }
@@ -277,7 +278,6 @@ public class Tour {
     this.guideId = guideId;
   }
 
-  @JsonBackReference
   public TourType getTourTypeId() {
     return tourTypeId;
   }
@@ -286,7 +286,6 @@ public class Tour {
     this.tourTypeId = tourTypeId;
   }
 
-  @JsonManagedReference
   public Collection<TourImage> getTourImageCollection() {
     return tourImageCollection;
   }

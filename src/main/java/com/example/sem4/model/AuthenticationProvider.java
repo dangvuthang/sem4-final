@@ -19,14 +19,13 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "authentication_providers")
-public class AuthenticationProvider  {
+public class AuthenticationProvider {
 
   private static final long serialVersionUID = 1L;
   @Id
   @NotNull
   private String providerKey;
-  
-  
+
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne
   private User userId;
@@ -46,7 +45,6 @@ public class AuthenticationProvider  {
     this.providerKey = providerKey;
   }
 
-  @JsonBackReference
   public User getUserId() {
     return userId;
   }
@@ -79,5 +77,5 @@ public class AuthenticationProvider  {
   public String toString() {
     return "model.AuthenticationProvider[ providerKey=" + providerKey + " ]";
   }
-  
+
 }

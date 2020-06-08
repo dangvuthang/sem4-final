@@ -105,7 +105,6 @@ public class ReviewTour {
     this.createdAt = createdAt;
   }
 
-  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }
@@ -114,7 +113,6 @@ public class ReviewTour {
     this.tourId = tourId;
   }
 
-  @JsonBackReference
   public User getUserId() {
     return userId;
   }

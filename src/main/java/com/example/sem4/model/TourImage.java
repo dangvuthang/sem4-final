@@ -23,18 +23,18 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "tour_images")
 
-public class TourImage  {
+public class TourImage {
 
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
-  
+
   @NotNull
   @Column(name = "image_url")
   private String imageUrl;
-  
+
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne
   private Tour tourId;
@@ -67,7 +67,6 @@ public class TourImage  {
     this.imageUrl = imageUrl;
   }
 
-  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }
@@ -100,5 +99,5 @@ public class TourImage  {
   public String toString() {
     return "model.TourImage[ id=" + id + " ]";
   }
-  
+
 }

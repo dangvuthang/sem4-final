@@ -116,7 +116,6 @@ public class Booking {
     this.quantity = quantity;
   }
 
-  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }
@@ -125,7 +124,6 @@ public class Booking {
     this.tourId = tourId;
   }
 
-  @JsonBackReference
   public User getUserId() {
     return userId;
   }

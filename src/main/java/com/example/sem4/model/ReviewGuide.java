@@ -105,7 +105,6 @@ public class ReviewGuide {
     this.createdAt = createdAt;
   }
 
-  @JsonBackReference
   public Guide getGuideId() {
     return guideId;
   }
@@ -114,7 +113,6 @@ public class ReviewGuide {
     this.guideId = guideId;
   }
 
-  @JsonBackReference
   public User getUserId() {
     return userId;
   }

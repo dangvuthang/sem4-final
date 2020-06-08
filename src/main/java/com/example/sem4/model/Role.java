@@ -5,7 +5,7 @@
  */
 package com.example.sem4.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -35,6 +35,8 @@ public class Role {
   @NotNull
   @Column(name = "name")
   private String name;
+
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "roleId")
   private Collection<User> userCollection;
 
@@ -66,7 +68,6 @@ public class Role {
     this.name = name;
   }
 
-  @JsonManagedReference
   public Collection<User> getUserCollection() {
     return userCollection;
   }

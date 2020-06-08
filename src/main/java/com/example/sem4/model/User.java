@@ -6,6 +6,7 @@
 package com.example.sem4.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Collection;
 import javax.persistence.CascadeType;
@@ -59,18 +60,23 @@ public class User {
   @Column(name = "name")
   private String name;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
   private Collection<Guide> guideCollection;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
   private Collection<ReviewTour> reviewTourCollection;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
   private Collection<ReviewGuide> reviewGuideCollection;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
   private Collection<Booking> bookingCollection;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "userId")
   private Collection<AuthenticationProvider> authenticationProviderCollection;
 
@@ -149,7 +155,6 @@ public class User {
     this.name = name;
   }
 
-  @JsonManagedReference
   public Collection<Guide> getGuideCollection() {
     return guideCollection;
   }
@@ -158,7 +163,6 @@ public class User {
     this.guideCollection = guideCollection;
   }
 
-  @JsonManagedReference
   public Collection<ReviewTour> getReviewTourCollection() {
     return reviewTourCollection;
   }
@@ -167,7 +171,6 @@ public class User {
     this.reviewTourCollection = reviewTourCollection;
   }
 
-  @JsonManagedReference
   public Collection<ReviewGuide> getReviewGuideCollection() {
     return reviewGuideCollection;
   }
@@ -176,7 +179,6 @@ public class User {
     this.reviewGuideCollection = reviewGuideCollection;
   }
 
-  @JsonManagedReference
   public Collection<Booking> getBookingCollection() {
     return bookingCollection;
   }
@@ -185,7 +187,6 @@ public class User {
     this.bookingCollection = bookingCollection;
   }
 
-  @JsonManagedReference
   public Collection<AuthenticationProvider> getAuthenticationProviderCollection() {
     return authenticationProviderCollection;
   }
@@ -194,7 +195,6 @@ public class User {
     this.authenticationProviderCollection = authenticationProviderCollection;
   }
 
-  @JsonBackReference
   public Role getRoleId() {
     return roleId;
   }

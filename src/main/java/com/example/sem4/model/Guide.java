@@ -6,6 +6,7 @@
 package com.example.sem4.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -51,9 +52,11 @@ public class Guide {
   @ManyToOne(optional = false)
   private User userId;
 
+  @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "guideId")
   private Collection<ReviewGuide> reviewGuideCollection;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "guideId")
   private Collection<Tour> tourCollection;
 
@@ -103,7 +106,6 @@ public class Guide {
     this.ratingAverage = ratingAverage;
   }
 
-  @JsonBackReference
   public User getUserId() {
     return userId;
   }
@@ -112,7 +114,6 @@ public class Guide {
     this.userId = userId;
   }
 
-  @JsonManagedReference
   public Collection<ReviewGuide> getReviewGuideCollection() {
     return reviewGuideCollection;
   }
@@ -121,7 +122,6 @@ public class Guide {
     this.reviewGuideCollection = reviewGuideCollection;
   }
 
-  @JsonManagedReference
   public Collection<Tour> getTourCollection() {
     return tourCollection;
   }

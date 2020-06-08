@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.util.Collection;
 import javax.persistence.Column;
@@ -22,18 +23,19 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "tour_types")
-public class TourType  {
+public class TourType {
 
   private static final long serialVersionUID = 1L;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id")
   private Long id;
-  
+
   @NotNull
   @Column(name = "name")
   private String name;
-  
+
+  @JsonIgnore
   @OneToMany(mappedBy = "tourTypeId")
   private Collection<Tour> tourCollection;
 
@@ -65,7 +67,6 @@ public class TourType  {
     this.name = name;
   }
 
-  @JsonManagedReference
   public Collection<Tour> getTourCollection() {
     return tourCollection;
   }
@@ -98,5 +99,5 @@ public class TourType  {
   public String toString() {
     return "model.TourType[ id=" + id + " ]";
   }
-  
+
 }

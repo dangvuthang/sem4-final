@@ -74,7 +74,6 @@ public class TourLocation {
     this.date = date;
   }
 
-  @JsonBackReference
   public Location getLocationId() {
     return locationId;
   }
@@ -83,7 +82,6 @@ public class TourLocation {
     this.locationId = locationId;
   }
 
-  @JsonBackReference
   public Tour getTourId() {
     return tourId;
   }
