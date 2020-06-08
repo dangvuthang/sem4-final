@@ -71,6 +71,9 @@ public class User {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
   private Collection<Booking> bookingCollection;
 
+  @OneToMany(mappedBy = "userId")
+  private Collection<AuthenticationProvider> authenticationProviderCollection;
+
   @JoinColumn(name = "role_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Role roleId;
@@ -145,9 +148,8 @@ public class User {
   public void setName(String name) {
     this.name = name;
   }
-  
-  
-@JsonManagedReference
+
+  @JsonManagedReference
   public Collection<Guide> getGuideCollection() {
     return guideCollection;
   }
@@ -155,7 +157,8 @@ public class User {
   public void setGuideCollection(Collection<Guide> guideCollection) {
     this.guideCollection = guideCollection;
   }
-@JsonManagedReference
+
+  @JsonManagedReference
   public Collection<ReviewTour> getReviewTourCollection() {
     return reviewTourCollection;
   }
@@ -163,7 +166,8 @@ public class User {
   public void setReviewTourCollection(Collection<ReviewTour> reviewTourCollection) {
     this.reviewTourCollection = reviewTourCollection;
   }
-@JsonManagedReference
+
+  @JsonManagedReference
   public Collection<ReviewGuide> getReviewGuideCollection() {
     return reviewGuideCollection;
   }
@@ -171,13 +175,23 @@ public class User {
   public void setReviewGuideCollection(Collection<ReviewGuide> reviewGuideCollection) {
     this.reviewGuideCollection = reviewGuideCollection;
   }
-@JsonManagedReference
+
+  @JsonManagedReference
   public Collection<Booking> getBookingCollection() {
     return bookingCollection;
   }
 
   public void setBookingCollection(Collection<Booking> bookingCollection) {
     this.bookingCollection = bookingCollection;
+  }
+
+  @JsonManagedReference
+  public Collection<AuthenticationProvider> getAuthenticationProviderCollection() {
+    return authenticationProviderCollection;
+  }
+
+  public void setAuthenticationProviderCollection(Collection<AuthenticationProvider> authenticationProviderCollection) {
+    this.authenticationProviderCollection = authenticationProviderCollection;
   }
 
   @JsonBackReference
