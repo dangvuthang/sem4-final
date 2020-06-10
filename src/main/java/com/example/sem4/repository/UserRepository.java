@@ -5,8 +5,10 @@
  */
 package com.example.sem4.repository;
 
+import com.example.sem4.model.Role;
 import com.example.sem4.model.User;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-  List<User> findByRoleId(Integer roleId);
+  List<User> findByRoleId(Role roleId);
 
-  User findByEmail(String email);
+  Optional<User> findByEmail(String email);
 }
