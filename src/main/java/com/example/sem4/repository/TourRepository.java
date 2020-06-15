@@ -6,16 +6,13 @@
 package com.example.sem4.repository;
 
 import com.example.sem4.model.Tour;
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  *
  * @author MyPC
  */
-public interface TourRepository extends JpaRepository<Tour, Integer> {
+public interface TourRepository extends JpaRepository<Tour, Integer>, JpaSpecificationExecutor<Tour> {
 
-  @Query("SELECT t FROM Tour t")
-  List<Tour> findAllTours();
 }
