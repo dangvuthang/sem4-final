@@ -1,26 +1,25 @@
 INSERT INTO roles("name") VALUES ('Admin'),('Guide'),('User');
 
 INSERT INTO users("name",email,password,phone,avatar_image,active,role_id) 
-VALUES ('user1','user1@gmail.com','123456','7778523610','user1.jpg',true,1),
-('user2','user2@gmail.com','123456','7778523523','user2.jpg',true,2),
-('user3','user3@gmail.com','123456','7778523672','user3.jpg',true,3);
+VALUES ('user1','user1@gmail.com','123456','7778523610','avatar.png',true,1),
+('user2','user2@gmail.com','123456','7778523523','avatar.png',true,2),
+('user3','user3@gmail.com','123456','7778523672','avatar.png',true,3);
 
 INSERT INTO guides(description,number_of_ratings,rating_average,user_id) 
 VALUES ('Good for tour guide knowledge',250,4.5,2);
 
 INSERT INTO tour_types(name)
-VALUES ('Relaxing'),('Design Beforehand'),('Volunteering'),('Sightseeing'),('Culture Tourism'),('Discover Food');
+VALUES ('Relaxing'), ('Sightseeing'), ('Adventure');
 
-SET timezone = 'Asia/Saigon';
 
-INSERT INTO tours(name,start_date,end_date,duration,max_group_size,price,price_discount,summary,description,tour_type_id,active,tour_image_cover,rating_average,number_of_ratings,guide_id)
-VALUES('Mia Nha Trang Resort','2020/07/15','2020/07/18',3,12,100,90,'Mia means ‘sugarcane’ and stays at Mia Resort sure are sweet, thanks to the private beach','The accommodation comprises 70 rooms. Work-out with fitness classes and a gym area and use a business center and a meeting room for business needs.',1,true,'NhaTrangRelaxing.jpg',5,98,1),
-('Hoi An','2020-07-15 19:00:00-07','2020-07-20 19:00:00-07',5,6,120,108,'Hoi An tours are ideal for travellers looking to experience the local culture and history of the UNESCO-listed coastal town','Wander around the holy place of the Champa Kingdom,Marvel at the greatness of the holy land',5,true,'HoiAnCulture.jpg',5,85,1),
-('Da Lat Tour','2020-07-18 19:00:00-07','2020-07-20 19:00:00-07',2,20,50,45,'Dalat City Tour is the tour program that you will travel inside Dalat city with the famous tourist attractions and cheapest price','Discover a city originally set up as a holiday destination, interspersed with French villas and bungalows.',4,true,'DalatSightSeeing.jpg',5,745,1),
-('Vung Tau','2020-07-16 19:00:00-07','2020-07-18 19:00:00-07',2,10,20,18,'A popular weekend escape from HCMC, Vung Tau rocks at weekends when beach-starved locals and expats descend in numbers','Visit Light House - one of the attractions in Vung Tau to discover. Lying on a small Tao Phung Mountain - one of the most ancient lighthouse in Southeast Asia',1,true,'VungTauRelaxing.jpg',4,586,1),
-('Phu Quoc','2020-07-14 19:00:00-07','2020-07-21 19:00:00-07',7,25,140,106,'Phu Quoc Island boasts idyllic beaches, romantic sunsets, evergreen forests, and a serene atmosphere, making it an ideal holiday destination','Aside from beachside activities, visitors can also explore traditional villages, expansive nature parks and Buddhist pagodas',6,true,'PhuQuocFoodDicovery.jpg',5,789,1),
-('Sa Pa','2020-07-18 19:00:00-07','2020-07-21 19:00:00-07',3,20,150,135,'Visit the beautiful Sapa - a famous market town in Northwest Vietnam','If you were expecting a quaint alpine town, recalibrate your expectations. Modern tourism development has mushroomed haphazardly.',2,true,'SaPaDesignBeforeHand.jpg',4,985,1),
-('Hue','2020-07-20 19:00:00-07','2020-07-25 19:00:00-07',5,30,40,36,'','',5,true,'HueCulture.jpg',4,125,1);
+INSERT INTO tours(name,start_date,end_date,duration,max_group_size,price,price_discount,summary,description,tour_type_id,active,tour_image_cover,rating_average,number_of_ratings,guide_id, current_group_size)
+VALUES('Mia Nha Trang Resort','2020/07/15','2020/07/18',3,12,100,0,'Mia means ‘sugarcane’ and stays at Mia Resort sure are sweet, thanks to the private beach','The accommodation comprises 70 rooms. Work-out with fitness classes and a gym area and use a business center and a meeting room for business needs.',1,true,'NhaTrangRelaxing.jpg',5,98,1, 5),
+('Hoi An','2020-07-15 ','2020-07-20 ',5,6,120,10,'Hoi An tours are ideal for travellers looking to experience the local culture and history of the UNESCO-listed coastal town','Wander around the holy place of the Champa Kingdom,Marvel at the greatness of the holy land',1,true,'HoiAnCulture.jpg',5,85,1, 5),
+('Da Lat Tour','2020-07-18 ','2020-07-20 ',2,20,50, 10,'Dalat City Tour is the tour program that you will travel inside Dalat city with the famous tourist attractions and cheapest price','Discover a city originally set up as a holiday destination, interspersed with French villas and bungalows.',1,true,'DalatSightSeeing.jpg',5,745,1, 5),
+('Vung Tau','2020-07-16 ','2020-07-18 ',2,10,20, 0,'A popular weekend escape from HCMC, Vung Tau rocks at weekends when beach-starved locals and expats descend in numbers','Visit Light House - one of the attractions in Vung Tau to discover. Lying on a small Tao Phung Mountain - one of the most ancient lighthouse in Southeast Asia',2,true,'VungTauRelaxing.jpg',4,586,1, 5),
+('Phu Quoc','2020-07-14 ','2020-07-21 ',7,25,140, 50,'Phu Quoc Island boasts idyllic beaches, romantic sunsets, evergreen forests, and a serene atmosphere, making it an ideal holiday destination','Aside from beachside activities, visitors can also explore traditional villages, expansive nature parks and Buddhist pagodas',2,true,'PhuQuocFoodDicovery.jpg',5,789,1, 5),
+('Sa Pa','2020-07-18 ','2020-07-21 ',3,20,150, 0,'Visit the beautiful Sapa - a famous market town in Northwest Vietnam','If you were expecting a quaint alpine town, recalibrate your expectations. Modern tourism development has mushroomed haphazardly.',2,true,'SaPaDesignBeforeHand.jpg',4,985,1, 5),
+('Hue','2020-07-20 ','2020-07-25 ',5,30,40, 10,'Lorem','Lorem',3,true,'HueCulture.jpg',4,125,1, 5);
 INSERT INTO tour_images(tour_id,image_url)
 VALUES (1,'NhaTrangRelaxing.jpg'),(1,'NhaTrang01.jpg'),(1,'NhaTrang02.jpg'),(1,'NhaTrang03.jpg'),(1,'NhaTrang04.jpg'),
        (2,'HoiAnCulture'),(2,'HoiAn01.jpg'),(2,'HoiAn02.jpg'),(2,'HoiAn03.jpg'),(2,'HoiAn04.jpg'),

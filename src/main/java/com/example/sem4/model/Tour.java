@@ -45,12 +45,12 @@ public class Tour {
 
   @NotNull
   @Column(name = "start_date")
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   private Date startDate;
 
   @NotNull
   @Column(name = "end_date")
-  @Temporal(TemporalType.TIMESTAMP)
+  @Temporal(TemporalType.DATE)
   private Date endDate;
 
   @NotNull
@@ -60,6 +60,10 @@ public class Tour {
   @NotNull
   @Column(name = "max_group_size")
   private int maxGroupSize;
+
+  @NotNull
+  @Column(name = "current_group_size")
+  private int currentGroupSize;
 
   @NotNull
   @Column(name = "price")
@@ -89,11 +93,11 @@ public class Tour {
   @Column(name = "number_of_ratings")
   private BigInteger numberOfRatings;
 
-  @JsonIgnore
+  @JsonManagedReference
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "tourId")
   private Collection<ReviewTour> reviewTourCollection;
 
-  @JsonIgnore
+  @JsonManagedReference
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "tourId")
   private Collection<TourLocation> tourLocationCollection;
 
