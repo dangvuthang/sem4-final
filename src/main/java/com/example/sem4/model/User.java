@@ -73,7 +73,7 @@ public class User {
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
   private Collection<Booking> bookingCollection;
 
-  @JsonIgnore
+  @JsonManagedReference
   @OneToMany(mappedBy = "userId")
   private Collection<AuthenticationProvider> authenticationProviderCollection;
 

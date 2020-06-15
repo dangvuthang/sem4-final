@@ -41,6 +41,7 @@ public class TourLocation {
   @ManyToOne(optional = false)
   private Location locationId;
 
+  @JsonBackReference
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Tour tourId;

@@ -94,12 +94,13 @@ public class UserController {
     } catch (AuthenticationException e) {
       throw new Exception("Incorrect username or password");
     }
-
+    User u = userRepository.findByEmail(authenticationRequest.getEmail()).get();
     String jwt = jwtUtil.generateToken(authenticationRequest.getEmail());
     Map<String, String> response = new HashMap<>();
     response.put("jwt", jwt);
     response.put("email", authenticationRequest.getEmail());
-
+    response.put("name", u.getName());
+    response.put("avatarImage", u.getAvatarImage());
     return ResponseEntity.ok().body(response);
   }
 
@@ -107,12 +108,15 @@ public class UserController {
   public ResponseEntity<?> signinWithGoogle(@RequestBody Map<String, String> json) throws Exception {
     Optional<AuthenticationProvider> a = authenticationProviderRepository.findByProviderKey(json.get("providerKey"));
     if (a.isPresent()) {
-      String email = a
-              .get().getUserId().getEmail();
+      String email = a.get().getUserId().getEmail();
+      String name = a.get().getUserId().getName();
+      String avatarImage = a.get().getUserId().getAvatarImage();
       String jwt = jwtUtil.generateToken(email);
       Map<String, String> response = new HashMap<>();
       response.put("jwt", jwt);
       response.put("email", email);
+      response.put("name", name);
+      response.put("avatarImage", avatarImage);
       return ResponseEntity.ok().body(response);
     }
     User u = new User();
@@ -131,6 +135,8 @@ public class UserController {
     Map<String, String> response = new HashMap<>();
     response.put("jwt", jwt);
     response.put("email", user.getEmail());
+    response.put("name", user.getName());
+    response.put("avatarImage", user.getAvatarImage());
     return ResponseEntity.ok().body(response);
   }
 
@@ -164,6 +170,8 @@ public class UserController {
     String jwt = jwtUtil.generateToken(u.getEmail());
     response.put("jwt", jwt);
     response.put("email", u.getEmail());
+    response.put("name", u.getName());
+    response.put("avatarImage", u.getAvatarImage());
     return ResponseEntity.ok().body(response);
   }
 

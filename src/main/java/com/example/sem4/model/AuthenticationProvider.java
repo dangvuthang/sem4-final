@@ -5,6 +5,7 @@
  */
 package com.example.sem4.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -24,6 +25,7 @@ public class AuthenticationProvider {
   @NotNull
   private String providerKey;
 
+  @JsonBackReference
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne
   private User userId;

@@ -49,6 +49,12 @@ public class TourController {
 
     return tourRepository.findAll();
   }
+  
+      @GetMapping("tours/{id}")
+    public ResponseEntity<?> getBookingById(@PathVariable(name = "id") Integer tourId) throws ResourceNotFoundException {
+        Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found booking with a given id: " + tourId));
+        return ResponseEntity.ok(tour);
+    }
 
   @GetMapping("tours/search")
   public List<Tour> getSeachTours(@RequestParam Optional<String> name, @RequestParam Optional<Integer> tourType, @RequestParam Optional<Integer> duration) {

@@ -46,6 +46,7 @@ public class ReviewTour {
   @Temporal(TemporalType.TIMESTAMP)
   private Date createdAt;
 
+  @JsonBackReference
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Tour tourId;
