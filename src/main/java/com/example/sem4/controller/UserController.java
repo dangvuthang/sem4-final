@@ -14,6 +14,7 @@ import com.example.sem4.model.User;
 import com.example.sem4.repository.AuthenticationProviderRepository;
 import com.example.sem4.repository.UserRepository;
 import com.example.sem4.util.JwtUtil;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,7 +37,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -62,22 +62,69 @@ public class UserController {
   @Autowired
   private JwtUtil jwtUtil;
 
+//  Get current user
   @GetMapping("users/{email}")
-  public ResponseEntity<User> getUserByEmail(@PathVariable(name = "email") String email) throws ResourceNotFoundException {
+  public ResponseEntity<?> getUserByEmail(@PathVariable(name = "email") String email) throws ResourceNotFoundException {
     User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
     return ResponseEntity.ok(user);
   }
 
-  @PutMapping("users/{email}")
+//  Update current user's info
+  @RequestMapping(path = "/users/{email}", method = RequestMethod.PUT,
+          consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<?> updateUserByEmail(@PathVariable(name = "email") String email,
-          @RequestBody User user) throws ResourceNotFoundException {
+          @ModelAttribute FormWrapper model) throws ResourceNotFoundException, IOException {
     User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
-    currentUser.setName(user.getName());
-    currentUser.setPhone(user.getPhone());
-    currentUser.setAvatarImage(user.getPhone());
-    return ResponseEntity.ok(userRepository.save(currentUser));
+    currentUser.setName(model.getName());
+    currentUser.setPhone(model.getPhone());
+    if (model.getAvatarImage() != null) {
+      String imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
+      String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
+      Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + imageName);
+      byte[] bytes = model.getAvatarImage().getBytes();
+      Files.write(path, bytes);
+      currentUser.setAvatarImage(imageName);
+    }
+    User updatedUser = userRepository.save(currentUser);
+    Map<String, String> response = new HashMap<>();
+    String jwt = jwtUtil.generateToken(updatedUser.getEmail());
+    response.put("jwt", jwt);
+    response.put("email", updatedUser.getEmail());
+    response.put("name", updatedUser.getName());
+    response.put("avatarImage", updatedUser.getAvatarImage());
+    return ResponseEntity.ok().body(response);
   }
 
+//  Update current user's password
+  @RequestMapping(path = "/users/password/{email}", method = RequestMethod.PUT)
+  public ResponseEntity<?> updateUserPassword(@PathVariable(name = "email") String email,
+          @RequestBody Map<String, String> json) throws ResourceNotFoundException {
+    User currentUser = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
+    Map<String, String> response = new HashMap<>();
+    String oldPassword = json.get("oldPassword");
+    String newPassword = json.get("newPassword");
+    String passwordConfirm = json.get("passwordConfirm");
+    if (!currentUser.getPassword().equals(oldPassword)) {
+      response.put("status", "fail");
+      response.put("message", "Incorrect old password");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    if (!newPassword.equals(passwordConfirm)) {
+      response.put("status", "fail");
+      response.put("message", "New password and password confirm not match. Try again !!!");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    currentUser.setPassword(newPassword);
+    User updatedUser = userRepository.save(currentUser);
+    String jwt = jwtUtil.generateToken(updatedUser.getEmail());
+    response.put("jwt", jwt);
+    response.put("email", updatedUser.getEmail());
+    response.put("name", updatedUser.getName());
+    response.put("avatarImage", updatedUser.getAvatarImage());
+    return ResponseEntity.ok().body(response);
+  }
+
+//  Deactive current user's account
   @DeleteMapping("users/email")
   public ResponseEntity<?> deactiveUser(@PathVariable(name = "email") String email) throws ResourceNotFoundException {
     User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
