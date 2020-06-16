@@ -7,17 +7,16 @@ package com.example.sem4.controller;
 
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.Tour;
-import com.example.sem4.model.TourType;
+import com.example.sem4.model.TourLocation;
 import com.example.sem4.repository.TourLocationRepository;
 import com.example.sem4.repository.TourRepository;
 import com.example.sem4.util.JwtUtil;
-import java.util.Date;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -46,15 +45,16 @@ public class TourController {
 
   @GetMapping("tours")
   public List<Tour> getAllTours() {
-
-    return tourRepository.findAll();
+    List<Tour> list = tourRepository.findAll();
+    list.forEach(tour -> tour.setGuideId(null));
+    return list;
   }
-  
-      @GetMapping("tours/{id}")
-    public ResponseEntity<?> getBookingById(@PathVariable(name = "id") Integer tourId) throws ResourceNotFoundException {
-        Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found booking with a given id: " + tourId));
-        return ResponseEntity.ok(tour);
-    }
+
+  @GetMapping("tours/{id}")
+  public ResponseEntity<?> getBookingById(@PathVariable(name = "id") Integer tourId) throws ResourceNotFoundException {
+    Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found booking with a given id: " + tourId));
+    return ResponseEntity.ok(tour);
+  }
 
   @GetMapping("tours/search")
   public List<Tour> getSeachTours(@RequestParam Optional<String> name, @RequestParam Optional<Integer> tourType, @RequestParam Optional<Integer> duration) {
