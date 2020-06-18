@@ -16,6 +16,7 @@ import com.example.sem4.util.JwtUtil;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,6 +53,16 @@ public class BookingController {
   @GetMapping(value = "bookings")
   public ResponseEntity<?> getAllBookings() {
     return ResponseEntity.ok().body(bookingRepository.findAll());
+  }
+
+  @GetMapping(value = "bookings/{id}")
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
+    List<Booking> list = bookingRepository.findByUserId(new User(id));
+    list.forEach(booking -> booking.setUserId(null));
+    list.forEach(booking -> booking.getTourId().setReviewTourCollection(null));
+    list.forEach(booking -> booking.getTourId().setTourLocationCollection(null));
+    list.forEach(booking -> booking.getTourId().setGuideId(null));
+    return ResponseEntity.ok().body(list);
   }
 
   @PostMapping(value = "/bookings/{email}")
