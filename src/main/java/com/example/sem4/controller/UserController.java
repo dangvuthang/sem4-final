@@ -130,7 +130,8 @@ public class UserController {
     User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
     user.setActive(false);
     Map<String, String> response = new HashMap<>();
-    response.put("status", "Successfully Deactive your account");
+    response.put("status", "success");
+    response.put("message", "Successfully Deactive your account");  
     return ResponseEntity.ok().body(response);
   }
 
@@ -144,6 +145,11 @@ public class UserController {
     User u = userRepository.findByEmail(authenticationRequest.getEmail()).get();
     String jwt = jwtUtil.generateToken(authenticationRequest.getEmail());
     Map<String, String> response = new HashMap<>();
+    if (u.getActive() == false) {
+      response.put("status", "fail");
+      response.put("message", "Your Account is already deactivated. Please contact admin.");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
     response.put("jwt", jwt);
     response.put("email", authenticationRequest.getEmail());
     response.put("name", u.getName());
