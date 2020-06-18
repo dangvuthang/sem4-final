@@ -7,11 +7,9 @@ package com.example.sem4.controller;
 
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.Tour;
-import com.example.sem4.model.TourLocation;
 import com.example.sem4.repository.TourLocationRepository;
 import com.example.sem4.repository.TourRepository;
 import com.example.sem4.util.JwtUtil;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -45,9 +43,15 @@ public class TourController {
 
   @GetMapping("tours")
   public List<Tour> getAllTours() {
-    List<Tour> list = tourRepository.findAll();
-    list.forEach(tour -> tour.setGuideId(null));
-    return list;
+    Stream<Tour> list = tourRepository.findAll().stream();
+    list = list.filter(tour -> tour.getActive() == true);
+    list = list.filter((Tour tour) -> {
+      tour.setGuideId(null);
+      return true;
+    });
+    list = list.filter(tour -> tour.getCurrentGroupSize() != tour.getMaxGroupSize());
+    List<Tour> result = list.collect(Collectors.toList());
+    return result;
   }
 
   @GetMapping("tours/{id}")
