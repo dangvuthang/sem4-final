@@ -123,7 +123,7 @@ public class Tour {
     this.id = id;
   }
 
-  public Tour(Integer id, String name, Date startDate, Date endDate, int duration, int maxGroupSize, BigInteger price, String summary, String description, boolean active) {
+  public Tour(Integer id, String name, Date startDate, Date endDate, int duration, int maxGroupSize, BigInteger price, String summary, String description, boolean active, int currentGroupSize) {
     this.id = id;
     this.name = name;
     this.startDate = startDate;
@@ -134,6 +134,7 @@ public class Tour {
     this.summary = summary;
     this.description = description;
     this.active = active;
+    this.currentGroupSize = currentGroupSize;
   }
 
   public Integer getId() {
@@ -294,6 +295,14 @@ public class Tour {
 
   public void setTourImageCollection(Collection<TourImage> tourImageCollection) {
     this.tourImageCollection = tourImageCollection;
+  }
+
+  public int getCurrentGroupSize() {
+    return currentGroupSize;
+  }
+
+  public void setCurrentGroupSize(int currentGroupSize) {
+    this.currentGroupSize = currentGroupSize;
   }
 
   @Override
