@@ -45,10 +45,10 @@ public class TourController {
   public List<Tour> getAllTours() {
     Stream<Tour> list = tourRepository.findAll().stream();
     list = list.filter(tour -> tour.getActive() == true);
-    list = list.filter((Tour tour) -> {
-      tour.setGuideId(null);
-      return true;
-    });
+//    list = list.filter((Tour tour) -> {
+//      tour.setGuideId(null);
+//      return true;
+//    });
     list = list.filter(tour -> tour.getCurrentGroupSize() != tour.getMaxGroupSize());
     List<Tour> result = list.collect(Collectors.toList());
     return result;

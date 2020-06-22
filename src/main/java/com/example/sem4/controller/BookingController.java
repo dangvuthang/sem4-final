@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -58,11 +59,21 @@ public class BookingController {
   @GetMapping(value = "bookings/{id}")
   public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
     List<Booking> list = bookingRepository.findByUserId(new User(id));
-    list.forEach(booking -> booking.setUserId(null));
-    list.forEach(booking -> booking.getTourId().setReviewTourCollection(null));
-    list.forEach(booking -> booking.getTourId().setTourLocationCollection(null));
-    list.forEach(booking -> booking.getTourId().setGuideId(null));
     return ResponseEntity.ok().body(list);
+  }
+
+  //  Deactive current user's account
+  @RequestMapping(path = "/bookings/{id}", method = RequestMethod.DELETE)
+  public ResponseEntity<?> deleteTour(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
+    Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Can not found booking with a given id: " + id));
+    Tour tour = tourRepository.findById(booking.getTourId().getId()).orElseThrow(() -> new ResourceNotFoundException("Can not found tour with a given id: " + booking.getTourId().getId()));
+    tour.setCurrentGroupSize(tour.getCurrentGroupSize() + booking.getQuantity());
+    bookingRepository.delete(booking);
+    tourRepository.save(tour);
+    Map<String, String> response = new HashMap<>();
+    response.put("status", "success");
+    response.put("message", "Successfully cancel your booking");
+    return ResponseEntity.ok().body(response);
   }
 
   @PostMapping(value = "/bookings/{email}")
