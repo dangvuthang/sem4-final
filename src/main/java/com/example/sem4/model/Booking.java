@@ -5,7 +5,6 @@
  */
 package com.example.sem4.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
@@ -49,6 +48,14 @@ public class Booking {
   @Column(name = "quantity")
   private Integer quantity;
 
+  @Column(name = "start_date")
+  @Temporal(TemporalType.DATE)
+  private Date startDate;
+
+  @Column(name = "end_date")
+  @Temporal(TemporalType.DATE)
+  private Date endDate;
+
   @JoinColumn(name = "tour_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
   private Tour tourId;
@@ -68,11 +75,13 @@ public class Booking {
     this.id = id;
   }
 
-  public Booking(Integer id, Date createdAt, BigDecimal price, Integer quantity) {
+  public Booking(Integer id, Date createdAt, BigDecimal price, Integer quantity, Date startDate, Date endDate) {
     this.id = id;
     this.createdAt = createdAt;
     this.price = price;
     this.quantity = quantity;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
   public Integer getId() {
@@ -139,6 +148,24 @@ public class Booking {
     this.isCancelled = isCancelled;
   }
 
+  public Date getStartDate() {
+    return startDate;
+  }
+
+  public void setStartDate(Date startDate) {
+    this.startDate = startDate;
+  }
+
+  public Date getEndDate() {
+    return endDate;
+  }
+
+  public void setEndDate(Date endDate) {
+    this.endDate = endDate;
+  }
+
+  
+  
   @Override
   public int hashCode() {
     int hash = 0;
