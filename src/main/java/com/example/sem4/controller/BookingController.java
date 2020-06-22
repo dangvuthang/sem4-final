@@ -104,6 +104,8 @@ public class BookingController {
     booking.setTourId(new Tour(tourId));
     booking.setQuantity(quantity);
     booking.setIsCancelled(true);
+    booking.setStartDate(tour.getStartDate());
+    booking.setEndDate(tour.getEndDate());
     tour.setCurrentGroupSize(tour.getCurrentGroupSize() + quantity);
     bookingRepository.save(booking);
     tourRepository.save(tour);
