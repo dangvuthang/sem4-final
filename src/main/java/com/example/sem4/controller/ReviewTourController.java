@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,12 @@ public class ReviewTourController {
   @GetMapping("review-tours")
   public List<ReviewTour> getAllReviewTours() {
     return reviewTourRepository.findAll();
+  }
+  
+    @GetMapping(value = "review-tours/{id}")
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
+    List<ReviewTour> list = reviewTourRepository.findByUserId(new User(id));
+    return ResponseEntity.ok().body(list);
   }
 
   @PostMapping(value = "review-tours")

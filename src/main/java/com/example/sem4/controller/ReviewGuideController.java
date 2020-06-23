@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,12 @@ public class ReviewGuideController {
   @GetMapping("review-guides")
   public List<ReviewGuide> getAllReviewGuides() {
     return reviewGuideRepository.findAll();
+  }
+
+  @GetMapping(value = "review-guides/{guideId}")
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "guideId") Integer guideId) {
+    List<ReviewGuide> list = reviewGuideRepository.findByGuideId(new Guide(guideId));
+    return ResponseEntity.ok().body(list);
   }
 
   @PostMapping(value = "review-guides")

@@ -18,6 +18,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -86,16 +87,35 @@ public class BookingController {
     BigDecimal price = new BigDecimal(json.get("price"));
     Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found tour with a given id " + tourId));
     Map<String, String> response = new HashMap<>();
+//    Check if tour has slots
     if (tour.getCurrentGroupSize() == tour.getMaxGroupSize()) {
       response.put("status", "fail");
       response.put("message", "Tour is fully booked !");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+//    Check if what user book is more than the maxGroupSize
     if (tour.getCurrentGroupSize() + quantity > tour.getMaxGroupSize()) {
       response.put("status", "fail");
       response.put("message", "Only " + (tour.getMaxGroupSize() - tour.getCurrentGroupSize()) + " spots left");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+//    Check if user has already booked this tour
+    Stream<Booking> list1 = bookingRepository.findByUserId(new User(currentUser.getId())).stream();
+    Stream<Booking> result1 = list1.filter(booking -> booking.getTourId().getId() == tourId && booking.getStartDate().equals(tour.getStartDate()));
+    if (result1.count() == 1) {
+      response.put("status", "fail");
+      response.put("message", "You have already booked this tour.");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+//  Check if within the new tour booked, there is any date that will coincide
+    Stream<Booking> list2 = bookingRepository.findByUserId(new User(currentUser.getId())).stream();
+    Stream<Booking> result2 = list2.filter(booking -> (tour.getStartDate().after(booking.getStartDate()) && tour.getEndDate().before(booking.getEndDate()) || (tour.getEndDate().after(booking.getStartDate()) && tour.getEndDate().before(booking.getEndDate()))));
+    if (result2.count() > 0) {
+      response.put("status", "fail");
+      response.put("message", "The tour is coincide with one of your upcoming tour");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+//  Save new Booking
     Booking booking = new Booking();
     booking.setCreatedAt(now);
     booking.setUserId(new User(currentUser.getId()));

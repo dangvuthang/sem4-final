@@ -6,6 +6,8 @@
 package com.example.sem4.repository;
 
 import com.example.sem4.model.ReviewTour;
+import com.example.sem4.model.User;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,5 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author MyPC
  */
 public interface ReviewTourRepository extends JpaRepository<ReviewTour, Integer> {
-    
+
+  List<ReviewTour> findByUserId(User user);
 }
