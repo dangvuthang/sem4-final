@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main_layout.html}">
+    <head>
+        <link rel="icon" sizes="76x76" href="/images/logo_32x32.png">
+        <title>Admin/Statistics - TRAVEL ToVN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.js"></script>
+        <!--Statistics-->
+        <!--<script src="/js/demo/chart-area-demo.js" type="module"></script>-->
+        <script src="/js/demo/chart-bar-demo.js" type="module"></script>
+        <script src="/js/demo/chart-pie-demo.js" type="module"></script>
+        <!--End Statistics-->
+    </head>
+    <body>
+        <div layout:fragment="sidebar-link">
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Tour Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tours}" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <span>Tours</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Locations</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link " th:href="@{/admin/tour_locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Location</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_types}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Types</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_images/}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Images</span>
+                </a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                User Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/roles}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Roles</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/users}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/bookings}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Bookings</span>
+                </a>
+            </li>
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/guides}">
+                    <span>Guides</span></a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/admin/statistics}">
+                    <span>Statistics</span></a>
+            </li>
+        </div>
+        <div layout:fragment="content">
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <h1 class="h3 mb-2 text-gray-800">TRAVEL ToVN - Statistics</h1>
+                <p class="mb-4"></p>
+
+                <!-- Content Row -->
+                <div class="row">
+
+                    <div class="col-xl-8 col-lg-7">
+
+                        <!-- Area Chart -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Booking Revenue</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area">
+                                    <canvas id="myAreaChart"></canvas>
+                                </div>
+                                <hr>
+                                <form id="printReport" method="post" th:action="@{/admin/bookings/report}">
+                                    <div style="display: block;margin-top: 2%">
+                                        <div style="display: block;margin-top: 2%">
+                                            From: <input type="date" id="fromDate" name="from" style="width: 60%"/>
+                                        </div>
+                                        <div style="display: block;margin-top: 2%">
+                                            To:<input type="date" id="toDate" name="to" style="margin-left: 3%;width: 60%"/>
+                                        </div>
+                                        <center>
+                                            <input type="submit" id="print" value="Print Report" style="margin-top: 2%"/>
+                                        </center>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Bar Chart -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Bar Chart</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-bar">
+                                    <canvas id="myBarChart"></canvas>
+                                </div>
+                                <hr>
+                                Styling for the bar chart can be found in the <code>/js/demo/chart-bar-demo.js</code> file.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <script type="text/javascript" th:inline="javascript">
+
+                $('#print').click(function (e) {
+                    e.preventDefault();
+                    var toDate = $('#toDate').val();
+                    var fromDate = $('#fromDate').val();
+                    if (new Date(toDate) <= new Date(fromDate)) {
+                        alert("Date 'To' must be greater than Date 'From'");
+                        return false;
+                    } else {
+                        $('#printReport').submit();
+                    }
+                })
+
+                Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+                Chart.defaults.global.defaultFontColor = '#858796';
+
+                function number_format(number, decimals, dec_point, thousands_sep) {
+                    // *     example: number_format(1234.56, 2, ',', ' ');
+                    // *     return: '1 234,56'
+                    number = (number + '').replace(',', '').replace(' ', '');
+                    var n = !isFinite(+number) ? 0 : +number,
+                            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+                            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+                            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+                            s = '',
+                            toFixedFix = function (n, prec) {
+                                var k = Math.pow(10, prec);
+                                return '' + Math.round(n * k) / k;
+                            };
+                    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+                    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+                    if (s[0].length > 3) {
+                        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+                    }
+                    if ((s[1] || '').length < prec) {
+                        s[1] = s[1] || '';
+                        s[1] += new Array(prec - s[1].length + 1).join('0');
+                    }
+                    return s.join(dec);
+                }
+// Area Chart Example
+                /*<![CDATA[*/
+                var list = /*[[${list}]]*/;
+                        var msg = /*[[${msg}]]*/;
+                /*]]>*/
+                if (msg != null) {
+                    alert(msg);
+                }
+//                var tooltipsLabel = ['Dhaka', 'Rajshahi', 'NewYork', 'London'];
+                var ctx = document.getElementById("myAreaChart");
+                var array = new Array(list[4].tourName, list[3].tourName, list[2].tourName, list[1].tourName, list[0].tourName);
+                var data = new Array(list[4].total, list[3].total, list[2].total, list[1].total, list[0].total);
+                var myLineChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: array,
+                        datasets: [{
+                                label: "Earnings",
+                                lineTension: 0.3,
+                                backgroundColor: "rgba(166, 225, 124)",
+                                borderColor: "rgba(78, 115, 223, 1)",
+                                pointRadius: 3,
+                                pointBackgroundColor: "rgba(78, 115, 223, 1)",
+                                pointBorderColor: "rgba(78, 115, 223, 1)",
+                                pointHoverRadius: 3,
+                                pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+                                pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+                                pointHitRadius: 10,
+                                pointBorderWidth: 2,
+                                data: data,
+                            }],
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {
+                                left: 10,
+                                right: 25,
+                                top: 25,
+                                bottom: 0
+                            }
+                        },
+                        scales: {
+                            xAxes: [{
+                                    time: {
+                                        unit: 'date'
+                                    },
+                                    gridLines: {
+                                        display: false,
+                                        drawBorder: false
+                                    },
+                                    ticks: {
+                                        maxTicksLimit: 7
+                                    },
+                                    maxBarThickness: 35,
+                                }],
+                            yAxes: [{
+                                    ticks: {
+                                        maxTicksLimit: 5,
+                                        padding: 10,
+                                        // Include a dollar sign in the ticks
+                                        callback: function (value, index, values) {
+                                            return '$' + number_format(value);
+                                        }
+                                    },
+                                    gridLines: {
+                                        color: "rgb(234, 236, 244)",
+                                        zeroLineColor: "rgb(234, 236, 244)",
+                                        drawBorder: false,
+                                        borderDash: [2],
+                                        zeroLineBorderDash: [2]
+                                    }
+                                }],
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltips: {
+                            backgroundColor: "rgb(255,255,255)",
+                            bodyFontColor: "#858796",
+                            titleMarginBottom: 10,
+                            titleFontColor: '#6e707e',
+                            titleFontSize: 14,
+                            borderColor: '#dddfeb',
+                            borderWidth: 1,
+                            xPadding: 15,
+                            yPadding: 15,
+                            displayColors: false,
+                            intersect: false,
+                            mode: 'index',
+                            caretPadding: 10,
+                            callbacks: {
+//                                title: function (tooltipItem, data) {
+//                                    console.log(tooltipItem);
+//                                    return tooltipsLabel[tooltipItem[0].index];
+//                                },
+                                label: function (tooltipItem, chart) {
+                                    var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                                    return datasetLabel + ': $' + number_format(tooltipItem.yLabel);
+                                }
+                            }
+                        }
+                    }
+                });
+            </script>
+        </div>
+    </body>
+</html>

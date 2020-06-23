@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main_layout.html}">
+    <head>
+        <title>Admin/Locations - TRAVEL ToVN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" sizes="76x76" th:href="@{/images/logo_32x32.png}">
+    </head>
+    <body>
+        <div layout:fragment="sidebar-link">
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Tour Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tours}" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <span>Tours</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item active">
+                <a class="nav-link " th:href="@{/admin/locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Locations</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link " th:href="@{/admin/tour_locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Location</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_types}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Types</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_images}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Images</span>
+                </a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                User Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/roles}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Roles</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/users}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/bookings}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Bookings</span>
+                </a>
+            </li>
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/guides}">
+                    <span>Guides</span></a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/statistics}">
+                    <span>Statistics</span></a>
+            </li>
+        </div>
+        <!--Modals -->
+        <div layout:fragment="modal">
+            <!-- The Modal Delete -->
+            <div   class="modal" id="deleteModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="delete">
+                        <form th:action="@{/admin/locations/active}" method="post">
+                            <div class="modal-header">
+                                <h3 style="color:#76C06C"></h3>
+                            </div>
+                            <div class="modal-body" >
+                                <input type="text" id="idActive" name="id" th:value="${id}" hidden="true"/>
+                                <p style="color:#76C06C">You are about to <span id="activeText" style="display: none"></span> a location, this procedure is irreversible.</p>
+                                <p style="color:#76C06C">Do you want to proceed?</p>
+                                <p></p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" style="width:50px;color:white;text-align:center;padding:5px;background-color:red;border: none" value="Yes"/>
+                                <a href="#" data-dismiss="modal" style="width:50px;color:white;text-align:center;padding:5px;background-color:gray">No</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Delete-->
+            <!-- The Modal Update -->
+            <div   class="modal" id="updateModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="update">
+                        <form th:object="${location}" id="updateForm" th:action="@{/admin/locations/update}" method="post" >
+                            <div class="modal-header">
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Locations</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="text" id="idUpdate" name="id" class="form-control" th:value="${id}" hidden="true">
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="name">Name</label>
+                                    <input type="text" id="nameUpdate" name="name" class="form-control" required>
+                                    <p style="display: none;color: red" id="validateUpdate"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="address">Address</label>
+                                    <input type="text" readonly="true" id="addressUpdate" name="address" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="longitude">Latitude</label>
+                                    <input type="number" readonly="true" id="longitudeUpdate" name="longitude" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="latitude">Longitude</label>
+                                    <input type="number" readonly="true" id="latitudeUpdate" name="latitude" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="activeUpdate" name="isActive" class="form-control" value="true" hidden="true">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" class="btn btn-success" value="Edit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Update-->
+            <!-- The Modal Add -->
+            <div   class="modal" id="addModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" id="add">
+                        <form id="addForm" th:action="@{/admin/locations}" method="post" >
+                            <div class="modal-header">
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Add Locations</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="name">Name</label>
+                                    <input  type="text" id="nameAdd" name="name" class="form-control" required /> 
+                                    <p style="display: none;color: red" id="validateAdd"></p>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="address">Address</label>
+                                    <input type="text" readonly="true" id="addressAdd" name="address" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="longitude">Latitude</label>
+                                    <input type="number" readonly="true" id="longitudeAdd" name="longitude" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="latitude">Longitude</label>
+                                    <input type="number" readonly="true" id="latitudeAdd" name="latitude" class="form-control" required/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="activeAdd" name="isActive" class="form-control" value="true" hidden="true">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" id="submit" class="btn btn-success" value="Add">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Add-->
+
+            <script type="text/javascript" th:inline='javascript'>
+                function submit() {
+                    alert('Hi');
+                }
+                $(document).ready(function (e) {
+
+
+
+                    /*<![CDATA[*/
+                    var msg = /*[[${msg}]]*/;
+                    /*]]>*/
+                    if (msg !== null) {
+                        alert(msg);
+                    }
+                    $('#addForm').on('submit', function (e) {
+                    })
+                    $('#createButton').on("click", function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        $('#addModal .modal-dialog').find('#add').css('display', 'block');
+                        $('#updateModal .modal-dialog').find('#update').css('display', 'none');
+                        $('#deleteModal .modal-dialog').find('#delete').css('display', 'none');
+                        $('#addModal').modal('show');
+                    });
+                    $(".update").on("click", function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        var origin = window.location.origin;
+                        //Fill data
+                        var spans = $(this).closest("tr").find("span");
+                        var id = spans.eq(0).text();
+                        $('#idUpdate').val(spans.eq(0).text());
+                        $('#nameUpdate').val(spans.eq(1).text());
+                        $('#latitudeUpdate').val(spans.eq(4).text());
+                        $('#longitudeUpdate').val(spans.eq(3).text());
+                        $('#addressUpdate').val(spans.eq(2).text());
+                        $('#updateModal .modal-dialog').find('#update').css('display', 'block');
+                        $('#addModal .modal-dialog').find('#add').css('display', 'none');
+                        $('#deleteModal .modal-dialog').find('#delete').css('display', 'none');
+                        $('#updateModal').modal('show');
+                        $('#myModal').modal("show");
+                        $('#myModal').on('shown.bs.modal', function (event) {
+                            // reset the scroll to top
+                            $('#myModal .modal-body').scrollTop(0);
+                        });
+                    });
+                    $("#nameUpdate").on('keyup', function (e) {
+                        var regex = new RegExp('^([a-zA-Z]+\\s*)+$');
+                        var address = $(this).val();
+                        if (regex.test(address)) {
+                            $('#validateUpdate').html('');
+                            $.ajax({
+                                url: "http://www.datasciencetoolkit.org/maps/api/geocode/json?address=" + address + "&sensor=false",
+                                type: 'GET',
+                                crossDomain: true,
+                                dataType: 'jsonp',
+                                contentType: 'application/json',
+                                success: function (data) {
+                                    //called when successful
+                                    if (data === null) {
+                                        $('#addressUpdate').val("No address found");
+                                    }
+                                    var result = JSON.stringify(data);
+                                    var list = JSON.parse(result);
+                                    $('#latitudeUpdate').val(list.results[0].geometry.location.lat);
+                                    $('#longitudeUpdate').val(list.results[0].geometry.location.lng);
+                                    if (list.results[0].formatted_address !== null) {
+                                        $('#addressUpdate').val(list.results[0].formatted_address);
+                                    }
+                                    $('#addressUpdate').val(list.results[0].address_components[0].long_name)
+                                },
+                                error: function (e) {
+                                    $('#addressUpdate').val("No address found");
+                                }
+                            });
+                        } else if (address === '') {
+
+                            $('#latitudeUpdate').val('');
+                            $('#longitudeUpdate').val('');
+                            $('#addressUpdate').val('');
+                        } else {
+                            $('#validateUpdate').css('display', 'block');
+                            $('#validateUpdate').html('Name must be alphabet');
+                            $('#latitudeUpdate').val('');
+                            $('#longitudeUpdate').val('');
+                            $('#addressUpdate').val('');
+                        }
+                    });
+                    $("#nameAdd").on('keyup', function (e) {
+                        var regex = new RegExp('^([a-zA-Z]+\\s*)+$');
+                        var address = $(this).val();
+                        if (regex.test(address)) {
+                            $('#validateAdd').html('');
+                            $.ajax({
+                                url: "http://www.datasciencetoolkit.org/maps/api/geocode/json?address=" + address + "&sensor=false",
+                                type: 'GET',
+                                crossDomain: true,
+                                dataType: 'jsonp',
+                                contentType: 'application/json',
+                                success: function (data) {
+                                    if (data === null) {
+                                        $('#addressUpdate').val("No address found");
+                                    }
+                                    //called when successful
+                                    var result = JSON.stringify(data);
+                                    var list = JSON.parse(result);
+                                    $('#latitudeAdd').val(list.results[0].geometry.location.lat);
+                                    $('#longitudeAdd').val(list.results[0].geometry.location.lng);
+                                    if (list.results[0].formatted_address !== null) {
+                                        $('#addressAdd').val(list.results[0].formatted_address)
+                                    }
+                                    $('#addressAdd').val(list.results[0].address_components[0].long_name)
+                                },
+                                error: function (e) {
+                                    $('#addressUpdate').val("No address found");
+                                }
+                            });
+                        } else if (address === '') {
+
+                            $('#latitudeUpdate').val('');
+                            $('#longitudeUpdate').val('');
+                            $('#addressUpdate').val('');
+                        } else {
+                            $('#validateAdd').css('display', 'block');
+                            $('#validateAdd').html('Name must be alphabet');
+                            $('#latitudeUpdate').val('');
+                            $('#longitudeUpdate').val('');
+                            $('#addressUpdate').val('');
+                        }
+                    });
+                    $(".delete").on('click', function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        $('#delete .modal-dialog').find('#delete').css('display', 'block');
+                        $('#addModal .modal-dialog').find('#add').css('display', 'none');
+                        $('#updateModal .modal-dialog').find('#update').css('display', 'none');
+                        var spans = $(this).closest("tr").find("span");
+                        var checked = $(this).closest("div").find(".delete:visible").text();
+                        $('#idActive').val(spans.eq(0).text());
+                        if (checked === "Deactive") {
+                            $('#delete').closest('div').find('h3').empty();
+                            var title = $('#delete').closest('div').find('h3').html('Deactive Tour');
+                            $('#activeText').html('deactive');
+                            $('#deleteModal').modal('show');
+                        } else {
+                            $('#delete').closest('div').find('h3').empty();
+                            var title = $('#delete').closest('div').find('h3').html('Active Tour');
+                            $('#activeText').html('active');
+                            $('#deleteModal').modal('show');
+                        }
+                    });
+                });
+            </script>
+        </div>
+        <!--Table-->
+        <div layout:fragment="content">
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">LIST OF LOCATIONS</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;color:#76C06C">ID</th>
+                                    <th style="color:#76C06C ">Name</th>
+                                    <th style="color:#76C06C ">Address</th>
+                                    <th style="color:#76C06C ">Longitude</th>
+                                    <th style="color:#76C06C ">Latitude</th>
+                                    <th style="color:#76C06C;width: 10%; ">Active</th>
+                                    <th style="color:#76C06C ">Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th style="color:#76C06C">ID</th>
+                                    <th style="color:#76C06C ">Name</th>
+                                    <th style="color:#76C06C ">Address</th>
+                                    <th style="color:#76C06C ">Longitude</th>
+                                    <th style="color:#76C06C ">Latitude</th>
+                                    <th style="color:#76C06C ">Active</th>
+                                    <th style="color:#76C06C ">Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr th:each="location : ${list}">
+                                    <td style="color:#76C06C"><span class="" th:text="${location.id}"></span></td>
+                                    <td style="color:#76C06C "><span class="" th:text="${location.name}"></span></td>
+                                    <td style="color:#76C06C "><span th:text="${location.address}"></span></td>
+                                    <td style="color:#76C06C "><span th:text="${location.longitude}"></span></td>
+                                    <td style="color:#76C06C "><span th:text="${location.latitude}"></span></td>
+                                    <td style="color:#76C06C "><input class="ch" type="checkbox" th:checked="${location.isActive}?'true':'false'"/></td>
+                                    <td style="color:#76C06C  " class="button-update update">
+                                        <div style="display: inline-block">
+                                            <button
+                                                id="updateBtn" class="update" style="border: 1px solid;border-radius: 8px;background: #007bff;color: white" th:data-id="${location.id}" >Update</button>
+                                            <button
+                                                id="activeBtn" data-href=""
+                                                class="button-delete delete" th:hidden="${location.isActive}?'false':'true'" style="text-align: center;width: 80px;border: 1px solid;border-radius: 8px;background: red;color: white" th:data-id="${location.id}">Deactive</button>
+                                            <button
+                                                id="activeBtn" data-href=""
+                                                class="button-delete delete" th:hidden="${location.isActive}?'true':'false'" style="text-align: center;width: 75px;border: 1px solid;border-radius: 8px;background: green;color: white" th:data-id="${location.id}">Active</button>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
