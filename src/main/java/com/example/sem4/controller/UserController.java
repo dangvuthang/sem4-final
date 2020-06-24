@@ -14,6 +14,7 @@ import com.example.sem4.model.User;
 import com.example.sem4.repository.AuthenticationProviderRepository;
 import com.example.sem4.repository.UserRepository;
 import com.example.sem4.util.JwtUtil;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -205,13 +206,15 @@ public class UserController {
     String imageName = "avatar.jpg";
     if (model.getAvatarImage() != null) {
       //    Get Path to save image
-      String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
-      System.out.println(rootPath);
-      System.out.println(new FileSystemResource("").getFile());
+//      String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
+//      imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
+//      Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + imageName);
+//      byte[] bytes = model.getAvatarImage().getBytes();
+//      Files.write(path, bytes);
       imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
-      Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + imageName);
+      Path resourceDirectory = Paths.get("src", "main", "resources", "static", "images", imageName);
       byte[] bytes = model.getAvatarImage().getBytes();
-      Files.write(path, bytes);
+      Files.write(resourceDirectory, bytes);
     }
     User u = new User();
     u.setEmail(model.getEmail());
@@ -219,7 +222,7 @@ public class UserController {
     u.setPhone(model.getPhone());
     u.setPassword(model.getPassword());
     u.setAvatarImage(imageName);
-    u.setRoleId(new Role(2));
+    u.setRoleId(new Role(3));
     u.setActive(Boolean.TRUE);
     userRepository.save(u);
     String jwt = jwtUtil.generateToken(u.getEmail());
