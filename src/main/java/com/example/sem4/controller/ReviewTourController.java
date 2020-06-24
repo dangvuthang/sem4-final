@@ -14,6 +14,8 @@ import com.example.sem4.repository.TourRepository;
 import com.example.sem4.util.JwtUtil;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +48,8 @@ public class ReviewTourController {
   public List<ReviewTour> getAllReviewTours() {
     return reviewTourRepository.findAll();
   }
-  
-    @GetMapping(value = "review-tours/{id}")
+
+  @GetMapping(value = "review-tours/{id}")
   public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
     List<ReviewTour> list = reviewTourRepository.findByUserId(new User(id));
     return ResponseEntity.ok().body(list);
@@ -69,9 +71,11 @@ public class ReviewTourController {
     currentReview.setActive(true);
     reviewTourRepository.save(currentReview);
     Tour currentTour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found tour with a given id " + tourId));
-    BigDecimal result = (currentTour.getRatingAverage().add(new BigDecimal(rating))).divide(new BigDecimal(2), 2);
-    currentTour.setRatingAverage(result);
-    currentTour.setNumberOfRatings(currentTour.getNumberOfRatings().add(BigInteger.ONE));
+    BigInteger numberOfRatings = currentTour.getNumberOfRatings();
+    BigDecimal previousSum = currentTour.getRatingAverage().multiply(new BigDecimal(numberOfRatings));
+    BigDecimal newAverage = previousSum.add(new BigDecimal(rating)).divide(new BigDecimal(numberOfRatings).add(BigDecimal.ONE), 2, RoundingMode.HALF_UP);
+    currentTour.setRatingAverage(newAverage);
+    currentTour.setNumberOfRatings(numberOfRatings.add(BigInteger.ONE));
     tourRepository.save(currentTour);
     Map<String, String> response = new HashMap<>();
     response.put("status", "success");

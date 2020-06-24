@@ -68,10 +68,6 @@ public class BookingController {
   public ResponseEntity<?> deleteBooking(@PathVariable(name = "id") Integer id) throws ResourceNotFoundException {
     Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Can not found booking with a given id: " + id));
     Tour tour = tourRepository.findById(booking.getTourId().getId()).orElseThrow(() -> new ResourceNotFoundException("Can not found tour with a given id: " + booking.getTourId().getId()));
-    System.out.println("---------------------------");
-    System.out.println(booking.getQuantity());
-    System.out.println(tour.getCurrentGroupSize());
-    System.out.println("---------------------------");
     tour.setCurrentGroupSize(tour.getCurrentGroupSize() - booking.getQuantity());
     bookingRepository.delete(booking);
     tourRepository.save(tour);
