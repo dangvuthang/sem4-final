@@ -206,6 +206,8 @@ public class UserController {
     if (model.getAvatarImage() != null) {
       //    Get Path to save image
       String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
+      System.out.println(rootPath);
+      System.out.println(new FileSystemResource("").getFile());
       imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
       Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + imageName);
       byte[] bytes = model.getAvatarImage().getBytes();
