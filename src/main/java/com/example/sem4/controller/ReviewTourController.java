@@ -7,37 +7,79 @@ package com.example.sem4.controller;
 
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.ReviewTour;
+import com.example.sem4.model.Tour;
+import com.example.sem4.model.User;
 import com.example.sem4.repository.ReviewTourRepository;
+import com.example.sem4.repository.TourRepository;
 import com.example.sem4.util.JwtUtil;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ReviewTourController {
-    @Autowired
-    private ReviewTourRepository reviewTourRepository;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+  @Autowired
+  private ReviewTourRepository reviewTourRepository;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+  @Autowired
+  private TourRepository tourRepository;
 
-    @GetMapping("admin/review_tours")
-    public List<ReviewTour> getAllReviewTours() {
-        return reviewTourRepository.findAll();
-    }
+  @Autowired
+  private JwtUtil jwtUtil;
 
-    @GetMapping("/admin/review_tours/{id}")
-    public ResponseEntity<ReviewTour> getReviewTourById(@PathVariable(name = "id") Integer reviewTourId) throws ResourceNotFoundException {
-        ReviewTour reviewTour = reviewTourRepository.findById(reviewTourId).orElseThrow(() -> new ResourceNotFoundException("Can not found Review Tour with a given id: " + reviewTourId));
-        return ResponseEntity.ok(reviewTour);
-    }
+  @GetMapping("review-tours")
+  public List<ReviewTour> getAllReviewTours() {
+    return reviewTourRepository.findAll();
+  }
+
+  @GetMapping(value = "review-tours/{id}")
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
+    List<ReviewTour> list = reviewTourRepository.findByUserId(new User(id));
+    return ResponseEntity.ok().body(list);
+  }
+
+  @PostMapping(value = "review-tours")
+  public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> json) throws ResourceNotFoundException {
+    int userId = Integer.parseInt(json.get("userId"));
+    int tourId = Integer.parseInt(json.get("tourId"));
+    int rating = Integer.parseInt(json.get("rating"));
+    String review = json.get("review");
+    ReviewTour currentReview = new ReviewTour();
+    Timestamp now = new Timestamp(System.currentTimeMillis());
+    currentReview.setCreatedAt(now);
+    currentReview.setTourId(new Tour(tourId));
+    currentReview.setUserId(new User(userId));
+    currentReview.setRating(rating);
+    currentReview.setReview(review);
+    currentReview.setActive(true);
+    reviewTourRepository.save(currentReview);
+    Tour currentTour = tourRepository.findById(tourId).orElseThrow(() -> new ResourceNotFoundException("Can not found tour with a given id " + tourId));
+    BigInteger numberOfRatings = currentTour.getNumberOfRatings();
+    BigDecimal previousSum = currentTour.getRatingAverage().multiply(new BigDecimal(numberOfRatings));
+    BigDecimal newAverage = previousSum.add(new BigDecimal(rating)).divide(new BigDecimal(numberOfRatings).add(BigDecimal.ONE), 2, RoundingMode.HALF_UP);
+    currentTour.setRatingAverage(newAverage);
+    currentTour.setNumberOfRatings(numberOfRatings.add(BigInteger.ONE));
+    tourRepository.save(currentTour);
+    Map<String, String> response = new HashMap<>();
+    response.put("status", "success");
+    response.put("message", "Successfully saved review");
+    return ResponseEntity.ok().body(response);
+  }
 }

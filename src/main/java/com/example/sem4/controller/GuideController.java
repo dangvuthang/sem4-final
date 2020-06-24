@@ -17,6 +17,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,54 +29,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GuideController {
-    @Autowired
-    private GuideRepository guideRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
-    
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+  @Autowired
+  private GuideRepository guideRepository;
 
-    @GetMapping("/guides")
-    public List<Guide> getAllGuides() {
-        return guideRepository.findAll();
-    }
+  @Autowired
+  private UserRepository userRepository;
 
-    @GetMapping("/admin/guides/{id}")
-    public ResponseEntity<Guide> getGuideById(@PathVariable(name = "id") Integer guideId) throws ResourceNotFoundException {
-        Guide guide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
-        return ResponseEntity.ok(guide);
-    }
-    
-    @PostMapping("admin/guides/")
-    public Guide addGuide(@RequestBody Guide guide) throws ResourceNotFoundException {
-        return guideRepository.save(guide);
-    }
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
-    @PutMapping("admin/guides/{id}")
-    public ResponseEntity<Guide> updateGuideById(@PathVariable(name = "id") Integer guideId, @RequestBody Guide guide) throws ResourceNotFoundException {
-        Guide currentGuide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
-        currentGuide.setDescription(guide.getDescription());
-        return ResponseEntity.ok(guideRepository.save(currentGuide));
-    }
+  @Autowired
+  private JwtUtil jwtUtil;
 
-    @DeleteMapping("admin/guides/{id}")
-    public Map<String, Boolean> deleteGuide(@PathVariable(name = "id") Integer guideId) throws ResourceNotFoundException {
-        Guide currentGuide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
-        Map<String, Boolean> response = new HashMap<>();
-        for (User user : userRepository.findAll()) {
-            if (user.getGuideCollection().contains(currentGuide)) {
-                response.put("deleted", Boolean.FALSE);
-                return response;
-            }
-        }
-        guideRepository.delete(currentGuide);
-        response.put("deleted", Boolean.TRUE);
-        return response;
-    }
+  @GetMapping("/guides")
+  public List<Guide> getAllGuides() {
+    return guideRepository.findAll();
+  }
+
+  @GetMapping("/guides/{id}")
+  public ResponseEntity<Guide> getGuideById(@PathVariable(name = "id") Integer guideId) throws ResourceNotFoundException {
+    Guide guide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found Guide with a given id: " + guideId));
+    return ResponseEntity.ok(guide);
+  }
+
 }

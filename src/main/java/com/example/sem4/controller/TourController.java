@@ -11,6 +11,7 @@ import com.example.sem4.repository.TourLocationRepository;
 import com.example.sem4.repository.TourRepository;
 import com.example.sem4.util.JwtUtil;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -45,10 +46,6 @@ public class TourController {
   public List<Tour> getAllTours() {
     Stream<Tour> list = tourRepository.findAll().stream();
     list = list.filter(tour -> tour.getActive() == true);
-    list = list.filter((Tour tour) -> {
-      tour.setGuideId(null);
-      return true;
-    });
     list = list.filter(tour -> tour.getCurrentGroupSize() != tour.getMaxGroupSize());
     List<Tour> result = list.collect(Collectors.toList());
     return result;
@@ -61,7 +58,7 @@ public class TourController {
   }
 
   @GetMapping("tours/search")
-  public List<Tour> getSeachTours(@RequestParam Optional<String> name, @RequestParam Optional<Integer> tourType, @RequestParam Optional<Integer> duration) {
+  public List<Tour> getSeachTours(@RequestParam Optional<String> name, @RequestParam Optional<Integer> tourType, @RequestParam Optional<Integer> duration, @RequestParam Optional<Integer> guideId) {
     Stream<Tour> list = tourRepository.findAll().stream();
     if (name.isPresent()) {
       list = list.filter(tour -> tour.getName().toLowerCase().contains(name.get().toLowerCase()));
@@ -79,6 +76,9 @@ public class TourController {
       if (duration.get() == 7) {
         list = list.filter(tour -> tour.getDuration() >= 7);
       }
+    }
+    if (guideId.isPresent()) {
+      list = list.filter(tour -> Objects.equals(tour.getGuideId().getId(), guideId.get()));
     }
     List<Tour> result = list.collect(Collectors.toList());
     return result;

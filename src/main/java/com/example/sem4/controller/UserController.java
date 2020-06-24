@@ -63,7 +63,7 @@ public class UserController {
   private JwtUtil jwtUtil;
 
 //  Get current user
-  @GetMapping("users/{email}")
+  @GetMapping("/users/{email}")
   public ResponseEntity<?> getUserByEmail(@PathVariable(name = "email") String email) throws ResourceNotFoundException {
     User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
     return ResponseEntity.ok(user);
@@ -125,25 +125,31 @@ public class UserController {
   }
 
 //  Deactive current user's account
-  @DeleteMapping("users/email")
+  @RequestMapping(path = "/users/{email}", method = RequestMethod.DELETE)
   public ResponseEntity<?> deactiveUser(@PathVariable(name = "email") String email) throws ResourceNotFoundException {
     User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given email: " + email));
     user.setActive(false);
+    userRepository.save(user);
     Map<String, String> response = new HashMap<>();
-    response.put("status", "Successfully Deactive your account");
+    response.put("status", "success");
+    response.put("message", "Successfully Deactive your account");
     return ResponseEntity.ok().body(response);
   }
 
   @PostMapping(value = "/users/login")
   public ResponseEntity<?> login(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-    try {
-      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
-    } catch (AuthenticationException e) {
-      throw new Exception("Incorrect username or password");
-    }
-    User u = userRepository.findByEmail(authenticationRequest.getEmail()).get();
-    String jwt = jwtUtil.generateToken(authenticationRequest.getEmail());
     Map<String, String> response = new HashMap<>();
+    User u = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow(() -> new ResourceNotFoundException("No user found with a given email: " + authenticationRequest.getEmail()));
+    if (!u.getPassword().equals(authenticationRequest.getPassword())) {
+      response.put("message", "Incorrect password. Try again!");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    if (u.getActive() == false) {
+      response.put("status", "fail");
+      response.put("message", "Your Account is already deactivated. Please contact admin.");
+      return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    String jwt = jwtUtil.generateToken(authenticationRequest.getEmail());
     response.put("jwt", jwt);
     response.put("email", authenticationRequest.getEmail());
     response.put("name", u.getName());
@@ -196,7 +202,7 @@ public class UserController {
       response.put("message", "Email is already is use!");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    String imageName = "avatar.png";
+    String imageName = "avatar.jpg";
     if (model.getAvatarImage() != null) {
       //    Get Path to save image
       String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
