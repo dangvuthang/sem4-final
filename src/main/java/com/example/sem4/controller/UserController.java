@@ -212,10 +212,9 @@ public class UserController {
 //      byte[] bytes = model.getAvatarImage().getBytes();
 //      Files.write(path, bytes);
       imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
-      Path resourceDirectory = Paths.get("src", "main", "resources", "static", "images");
-      String absolutePath = resourceDirectory.toFile().getAbsolutePath();
-      Path path = Paths.get(absolutePath + imageName);
-      System.out.println("HERE: "  + path);
+      String getPathToSave = new File(".").getCanonicalPath() + "/src/main/resources/static/images/";
+      Path path = Paths.get(getPathToSave + imageName);
+      System.out.println("HERE: " + path);
       byte[] bytes = model.getAvatarImage().getBytes();
       Files.write(path, bytes);
     }
