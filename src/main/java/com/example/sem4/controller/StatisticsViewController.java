@@ -7,8 +7,8 @@ package com.example.sem4.controller;
 
 import com.example.sem4.dto.BookingDTO;
 import com.example.sem4.repository.BookingRepository;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -19,9 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.DefaultJasperReportsContext;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -29,8 +29,10 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.HtmlExporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
@@ -39,7 +41,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import static sun.security.krb5.Confounder.bytes;
 
 @Controller
 public class StatisticsViewController {
@@ -154,10 +155,10 @@ public class StatisticsViewController {
             List<BookingDTO> list = bookingRepository.retrieveBookingAsDTO(fromDate, toDate);
             List<BookingDTO> listi = new ArrayList<>();
             Double Total = 0.0;
-            if (list.isEmpty()) {
-                redirect.addFlashAttribute("msg", "No data for date from: " + from + " to " + to);
-                return "redirect:/admin/statistics";
-            }
+//            if (list.isEmpty()) {
+//                redirect.addFlashAttribute("msg", "No data for date from: " + from + " to " + to);
+//                return "redirect:/admin/statistics";
+//            }
             if (list.size() < 5) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getDiscount().intValue() > 0) {
@@ -181,26 +182,23 @@ public class StatisticsViewController {
             }
 
             String report = "src/main/resources/Blank_A4Copy.jrxml";
-            ServletOutputStream servletOutputStream = response.getOutputStream();
             JRBeanCollectionDataSource ds = new JRBeanCollectionDataSource(listi);
-            File reportFile = new File(report);
             HashMap params = new HashMap();
             params.put("totalPrice", Total);
             params.put("Top5DataSource", ds);
             params.put("from", format2.format(fromDate));
             params.put("to", format2.format(toDate));
             params.put("image", "src/main/resources/static/images/logo_330x330.png");
-            byte[] bytes = null;
-            bytes = JasperRunManager.runReportToPdf(reportFile.getPath(), params, new JREmptyDataSource());
-
-            response.setContentType("application/pdf");
-            response.setContentLength(bytes.length);
-
-            servletOutputStream.write(bytes, 0, bytes.length);
-            servletOutputStream.flush();
-            servletOutputStream.close();
+            response.setContentType("text/html");
+            InputStream is=this.getClass().getResourceAsStream(report);
+            JasperReport jasperReport=JasperCompileManager.compileReport(report);
+            JasperPrint jasperPrint=JasperFillManager.fillReport(jasperReport, params,new JREmptyDataSource());
+            HtmlExporter htmlExporter=new HtmlExporter(DefaultJasperReportsContext.getInstance());
+            htmlExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            htmlExporter.setExporterOutput(new SimpleHtmlExporterOutput(response.getWriter()));
+            htmlExporter.exportReport();
         } catch (Exception ex) {
-            return "redirect:/admin/statistics";
+//            return "redirect:/admin/statistics";
         }
         return null;
     }

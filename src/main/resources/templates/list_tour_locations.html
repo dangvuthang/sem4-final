@@ -213,9 +213,9 @@ and open the template in the editor.
                     $('#createButton').on("click", function (e) {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
-                        $('#addModal .modal-dialog').find('#add').css('display', 'block');
-                        $('#updateModal .modal-dialog').find('#update').css('display', 'none');
-                        $('#deleteModal .modal-dialog').find('#delete').css('display', 'none');
+                        $('#addModal .modal-content').find('#add').css('display', 'block');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
                         $('#addModal').modal('show');
 
                     });
@@ -224,9 +224,9 @@ and open the template in the editor.
                         e.stopImmediatePropagation();
                         var img = $(this).closest("tr").find(".img");
                         var imgText = img.attr('src');
-                        $('#updateModal .modal-dialog').find('#update').css('display', 'block');
-                        $('#addModal .modal-dialog').find('#add').css('display', 'none');
-                        $('#deleteModal .modal-dialog').find('#delete').css('display', 'none');
+                        $('#updateModal .modal-content').find('#update').css('display', 'block');
+                        $('#addModal .modal-content').find('#add').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
                         $('#updateModal').modal('show');
 
                         //Fill data
@@ -251,9 +251,9 @@ and open the template in the editor.
                     $(".delete").on('click', function (e) {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
-                        $('#delete .modal-dialog').find('#delete').css('display', 'block');
-                        $('#addModal .modal-dialog').find('#add').css('display', 'none');
-                        $('#updateModal .modal-dialog').find('#update').css('display', 'none');
+                        $('#delete .modal-content').find('#delete').css('display', 'block');
+                        $('#addModal .modal-content').find('#add').css('display', 'none');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
 
                         var spans = $(this).closest("tr").find("span");
                         $('#idActive').val(spans.eq(0).text());

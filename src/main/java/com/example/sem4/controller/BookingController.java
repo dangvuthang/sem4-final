@@ -53,8 +53,8 @@ public class BookingController {
   private JwtUtil jwtUtil;
 
   @GetMapping(value = "bookings")
-  public List<BookingDTO> getAllBookings() {
-    return bookingRepository.retrieveBookingAsDTO();
+  public List<Booking> getAllBookings() {
+    return bookingRepository.findAll();
   }
 
   @GetMapping(value = "bookings/{id}")

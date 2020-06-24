@@ -119,7 +119,7 @@ and open the template in the editor.
                     <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="update">
                         <form th:object="${location}" id="updateForm" th:action="@{/admin/locations/update}" method="post" >
                             <div class="modal-header">
-                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Locations</h4>
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Location</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -161,7 +161,7 @@ and open the template in the editor.
                     <div class="modal-content" id="add">
                         <form id="addForm" th:action="@{/admin/locations}" method="post" >
                             <div class="modal-header">
-                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Add Locations</h4>
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Add Location</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -214,9 +214,9 @@ and open the template in the editor.
                     $('#createButton').on("click", function (e) {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
-                        $('#addModal .modal-dialog').find('#add').css('display', 'block');
-                        $('#updateModal .modal-dialog').find('#update').css('display', 'none');
-                        $('#deleteModal .modal-dialog').find('#delete').css('display', 'none');
+                        $('#addModal .modal-content').find('#add').css('display', 'block');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
                         $('#addModal').modal('show');
                     });
                     $(".update").on("click", function (e) {
@@ -231,9 +231,9 @@ and open the template in the editor.
                         $('#latitudeUpdate').val(spans.eq(4).text());
                         $('#longitudeUpdate').val(spans.eq(3).text());
                         $('#addressUpdate').val(spans.eq(2).text());
-                        $('#updateModal .modal-dialog').find('#update').css('display', 'block');
-                        $('#addModal .modal-dialog').find('#add').css('display', 'none');
-                        $('#deleteModal .modal-dialog').find('#delete').css('display', 'none');
+                        $('#updateModal .modal-content').find('#update').css('display', 'block');
+                        $('#addModal .modal-content').find('#add').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
                         $('#updateModal').modal('show');
                         $('#myModal').modal("show");
                         $('#myModal').on('shown.bs.modal', function (event) {
@@ -328,20 +328,20 @@ and open the template in the editor.
                     $(".delete").on('click', function (e) {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
-                        $('#delete .modal-dialog').find('#delete').css('display', 'block');
-                        $('#addModal .modal-dialog').find('#add').css('display', 'none');
-                        $('#updateModal .modal-dialog').find('#update').css('display', 'none');
+                        $('#delete .modal-content').find('#delete').css('display', 'block');
+                        $('#addModal .modal-content').find('#add').css('display', 'none');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
                         var spans = $(this).closest("tr").find("span");
                         var checked = $(this).closest("div").find(".delete:visible").text();
                         $('#idActive').val(spans.eq(0).text());
                         if (checked === "Deactive") {
                             $('#delete').closest('div').find('h3').empty();
-                            var title = $('#delete').closest('div').find('h3').html('Deactive Tour');
+                            var title = $('#delete').closest('div').find('h3').html('Deactive Location');
                             $('#activeText').html('deactive');
                             $('#deleteModal').modal('show');
                         } else {
                             $('#delete').closest('div').find('h3').empty();
-                            var title = $('#delete').closest('div').find('h3').html('Active Tour');
+                            var title = $('#delete').closest('div').find('h3').html('Active Location');
                             $('#activeText').html('active');
                             $('#deleteModal').modal('show');
                         }
