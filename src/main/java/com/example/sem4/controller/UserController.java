@@ -215,6 +215,7 @@ public class UserController {
       Path resourceDirectory = Paths.get("src", "main", "resources", "static", "images");
       String absolutePath = resourceDirectory.toFile().getAbsolutePath();
       Path path = Paths.get(absolutePath + imageName);
+      System.out.println("HERE: "  + path);
       byte[] bytes = model.getAvatarImage().getBytes();
       Files.write(path, bytes);
     }
