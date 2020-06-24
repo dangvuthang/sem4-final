@@ -13,6 +13,7 @@ import com.example.sem4.repository.GuideRepository;
 import com.example.sem4.repository.ReviewGuideRepository;
 import com.example.sem4.util.JwtUtil;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,8 +51,15 @@ public class ReviewGuideController {
     return reviewGuideRepository.findAll();
   }
 
+  @GetMapping(value = "review-guides/{guideId}")
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "guideId") Integer guideId) {
+    List<ReviewGuide> list = reviewGuideRepository.findByGuideId(new Guide(guideId));
+    return ResponseEntity.ok().body(list);
+  }
+
   @PostMapping(value = "review-guides")
   public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> json) throws ResourceNotFoundException {
+    System.out.println("ENTER");
     int userId = Integer.parseInt(json.get("userId"));
     int guideId = Integer.parseInt(json.get("guideId"));
     int rating = Integer.parseInt(json.get("rating"));
@@ -65,8 +74,10 @@ public class ReviewGuideController {
     currentReviewGuide.setActive(true);
     reviewGuideRepository.save(currentReviewGuide);
     Guide currentGuide = guideRepository.findById(guideId).orElseThrow(() -> new ResourceNotFoundException("Can not found guide with a given id " + guideId));
-    BigDecimal result = (currentGuide.getRatingAverage().add(new BigDecimal(rating))).divide(new BigDecimal(2), 2);
-    currentGuide.setRatingAverage(result);
+    Integer numberOfRatings = currentGuide.getNumberOfRatings();
+    BigDecimal previousSum = currentGuide.getRatingAverage().multiply(new BigDecimal(numberOfRatings));
+    BigDecimal newAverage = previousSum.add(new BigDecimal(rating)).divide(new BigDecimal(numberOfRatings).add(BigDecimal.ONE), 2, RoundingMode.HALF_UP);
+    currentGuide.setRatingAverage(newAverage);
     currentGuide.setNumberOfRatings(currentGuide.getNumberOfRatings() + 1);
     guideRepository.save(currentGuide);
     Map<String, String> response = new HashMap<>();

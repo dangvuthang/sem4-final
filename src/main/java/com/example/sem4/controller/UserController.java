@@ -13,26 +13,19 @@ import com.example.sem4.model.Role;
 import com.example.sem4.model.User;
 import com.example.sem4.repository.AuthenticationProviderRepository;
 import com.example.sem4.repository.UserRepository;
+import com.example.sem4.service.CloudinaryService;
 import com.example.sem4.util.JwtUtil;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,6 +55,9 @@ public class UserController {
   @Autowired
   private JwtUtil jwtUtil;
 
+  @Autowired
+  private CloudinaryService cloudinaryService;
+
 //  Get current user
   @GetMapping("/users/{email}")
   public ResponseEntity<?> getUserByEmail(@PathVariable(name = "email") String email) throws ResourceNotFoundException {
@@ -78,11 +74,8 @@ public class UserController {
     currentUser.setName(model.getName());
     currentUser.setPhone(model.getPhone());
     if (model.getAvatarImage() != null) {
-      String imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
-      String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
-      Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + imageName);
-      byte[] bytes = model.getAvatarImage().getBytes();
-      Files.write(path, bytes);
+      Map result = cloudinaryService.upload(model.getAvatarImage());
+      String imageName = (String) result.get("url");
       currentUser.setAvatarImage(imageName);
     }
     User updatedUser = userRepository.save(currentUser);
@@ -202,14 +195,11 @@ public class UserController {
       response.put("message", "Email is already is use!");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    String imageName = "avatar.jpg";
+    String imageName = "https://res.cloudinary.com/dybygufkr/image/upload/v1593000869/avatar_q2ysxd.jpg";
     if (model.getAvatarImage() != null) {
-      //    Get Path to save image
-      String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
-      imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
-      Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + imageName);
-      byte[] bytes = model.getAvatarImage().getBytes();
-      Files.write(path, bytes);
+//      Save image to cloudinary
+      Map result = cloudinaryService.upload(model.getAvatarImage());
+      imageName = (String) result.get("url");
     }
     User u = new User();
     u.setEmail(model.getEmail());
@@ -217,7 +207,7 @@ public class UserController {
     u.setPhone(model.getPhone());
     u.setPassword(model.getPassword());
     u.setAvatarImage(imageName);
-    u.setRoleId(new Role(2));
+    u.setRoleId(new Role(3));
     u.setActive(Boolean.TRUE);
     userRepository.save(u);
     String jwt = jwtUtil.generateToken(u.getEmail());
