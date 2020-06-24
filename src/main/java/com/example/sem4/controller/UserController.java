@@ -213,6 +213,7 @@ public class UserController {
 //      Files.write(path, bytes);
       imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
       Path resourceDirectory = Paths.get("src", "main", "resources", "static", "images", imageName);
+      System.out.println(resourceDirectory);
       byte[] bytes = model.getAvatarImage().getBytes();
       Files.write(resourceDirectory, bytes);
     }
