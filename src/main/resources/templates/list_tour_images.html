@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main_layout.html}">
+    <head>
+        <title>Admin/Tour Images - TRAVEL ToVN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" sizes="76x76" th:href="@{/images/logo_32x32.png}">
+    </head>
+    <body>
+        <div layout:fragment="sidebar-link">
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Tour Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tours}" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <span>Tours</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Locations</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link " th:href="@{/admin/tour_locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Location</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_types}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Types</span>
+                </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link " th:href="@{/admin/tour_images}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Images</span>
+                </a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                User Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/roles}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Roles</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/users}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/bookings}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Bookings</span>
+                </a>
+            </li>
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/guides}">
+                    <span>Guides</span></a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/statistics}">
+                    <span>Statistics</span></a>
+            </li>
+        </div>
+        <!--Modals -->
+        <div layout:fragment="modal">
+            <!-- The Modal Delete -->
+            <div   class="modal" id="deleteModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="delete">
+                        <form th:action="@{/admin/tour_images/delete}" method="post">
+                            <div class="modal-header">
+                                <h3 style="color:#76C06C">Delete Tour Image</h3>
+                            </div>
+                            <div class="modal-body" >
+                                <input type="text" id="idActive" name="id" th:value="${id}" hidden="true"/>
+                                <p style="color:#76C06C">You are about to delete a tour image, this procedure is irreversible.</p>
+                                <p style="color:#76C06C">Do you want to proceed?</p>
+                                <p></p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" style="width:50px;color:white;text-align:center;padding:5px;background-color:red;border: none" value="Yes"/>
+                                <a href="#" data-dismiss="modal" style="width:50px;color:white;text-align:center;padding:5px;background-color:gray">No</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Delete-->
+            <!-- The Modal Update -->
+            <div   class="modal" id="updateModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="update">
+                        <form id="updateForm" th:action="@{/admin/tour_images/update}" enctype="multipart/form-data" method="post" >
+                            <div class="modal-header">
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Tour Image</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="text" id="idUpdate" name="id" class="form-control" hidden="true">
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="tourId" >Tour</label>
+                                    <select name="tourId"  id="tourIdUpdate" class="form-control"  required="true">
+                                        <option value="">Select Tour</option> 
+                                        <option th:each="tour : ${listTour}" th:value="${tour.getId()}" th:utext="${tour.getName()}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="tourImageCover">Tour Image</label>
+                                    <input id="pathUpdate" name="file" type="file" hidden="true"/>
+                                    <input type="text" id="imageUrlUpdate" name="imageUrl" class="form-control input"  required/>
+                                    <img style="margin-top: 5% " width="150px" height="150px" src="" id="imageCoverUpdate"/>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" class="btn btn-success" value="Edit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Update-->
+            <!-- The Modal Add -->
+            <div   class="modal" id="addModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" id="add">
+                        <form id="addForm" th:action="@{/admin/tour_images}" enctype="multipart/form-data" method="post" >
+                            <div class="modal-header">
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Add Tour Image</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="tourId" >Tour</label>
+                                    <select name="tourId"  id="tourIdAdd" class="form-control" required="true">
+                                        <option value="">Select Tour</option> 
+                                        <option th:each="tour : ${listTour}" th:value="${tour.getId()} " th:utext="${tour.getName()}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="imageUrl">Tour Image</label>
+                                    <input id="pathAdd" name="file"  type="file" hidden="true"/>
+                                    <input type="text" id="imageUrlAdd" name="imageUrl"  class="form-control input"  required/>
+                                    <img style="margin-top: 5% " width="150px" height="150px" src="" id="imageCoverAdd"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit" id="submit" class="btn btn-success" value="Add">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Add-->
+
+            <script type="text/javascript" th:inline='javascript'>
+                $(document).ready(function (e) {
+
+
+                    /*<![CDATA[*/
+                    var msg = /*[[${msg}]]*/;
+                    /*]]>*/
+                    if (msg != null) {
+                        alert(msg);
+                    }
+                    $('#addForm').on('submit', function (e) {
+                    })
+                    $('#createButton').on("click", function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        $('#imageCoverAdd').attr('src', '');
+                        $('#imageUrlAdd').val('');
+                        $('#addModal .modal-content').find('#add').css('display', 'block');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
+                        $('#addModal').modal('show');
+
+                    });
+                    $(".update").on("click", function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        var img = $(this).closest("tr").find(".img");
+                        var imgText = img.attr('src');
+                        $('#updateModal .modal-content').find('#update').css('display', 'block');
+                        $('#addModal .modal-content').find('#add').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
+                        $('#updateModal').modal('show');
+
+                        //Fill data
+                        var spans = $(this).closest("tr").find("span");
+                        $('#idUpdate').val(spans.eq(0).text());
+                        $('#tourIdUpdate option:contains(' + spans.eq(1).text() + ')').attr('selected', 'selected');
+                        $('#imageUrlUpdate').val(img.attr('src').split('\/').pop());
+                        $('#imageCoverUpdate').attr('src', imgText);
+                        $('#myModal').modal("show");
+                        //                            End Fill data
+                        $('#myModal').on('shown.bs.modal', function (event) {
+                            // reset the scroll to top
+                            $('#myModal .modal-body').scrollTop(0);
+                        });
+                    });
+                    $(".delete").on('click', function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        $('#delete .modal-content').find('#delete').css('display', 'block');
+                        $('#addModal .modal-content').find('#add').css('display', 'none');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
+                        //Fill data
+                        var spans = $(this).closest("tr").find("span");
+                        $('#idActive').val(spans.eq(0).text());
+                        //Open Modal
+                        $('#deleteModal').modal('show');
+                    });
+                    $('input[type=text]').closest('#imageUrlUpdate').click(function (e) {
+                        $('#pathUpdate').trigger('click');
+                    });
+                    $('#pathUpdate').change(function (e) {
+                        readUrlUpdate(this);
+//                        $('#imageCoverAdd').attr('src', val);
+                    });
+                    $('input[type=text]').closest('#imageUrlAdd').click(function (e) {
+                        $('#pathAdd').trigger('click');
+                    });
+                    $('#pathAdd').change(function (e) {
+                        readUrlAdd(this);
+//                        $('#imageCoverAdd').attr('src', val);
+                    });
+                    function readUrlUpdate(input) {
+                        var file = input.files[0];
+                        var fileType = file["type"];
+                        var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+                        if ($.inArray(fileType, validImageTypes) < 0) {
+                            alert('Upload images only!!!');
+                            return;
+                        }
+                        if (input.files && input.files[0]) {
+
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#imageCoverUpdate').attr('src', e.target.result);
+                                var vals = $('#pathUpdate').val();
+                                var val = vals.length ? vals.split('\\').pop() : '';
+                                $('#imageUrlUpdate').val(val);
+                            }
+
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                    function readUrlAdd(input) {
+                        var file = input.files[0];
+                        var fileType = file["type"];
+                        var validImageTypes = ["image/gif", "image/jpeg", "image/png"];
+                        if ($.inArray(fileType, validImageTypes) < 0) {
+                            alert('Upload images only!!!');
+                            return;
+                        }
+                        if (input.files && input.files[0]) {
+
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#imageCoverAdd').attr('src', e.target.result);
+                                var vals = $('#pathAdd').val();
+                                var val = vals.length ? vals.split('\\').pop() : '';
+                                $('#imageUrlAdd').val(val);
+                            }
+
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                });
+            </script>
+            <script>
+
+            </script>
+        </div>
+        <!--Table-->
+        <div layout:fragment="content">
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">LIST OF TOUR IMAGES</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;color:#76C06C ">ID</th>
+                                    <th style="color:#76C06C ">Image</th>
+                                    <th style="color:#76C06C ">Tour</th>
+                                    <th style="color:#76C06C ">Action</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th style="color:#76C06C ">ID</th>
+                                    <th style="color:#76C06C ">Image</th>
+                                    <th style="color:#76C06C ">Tour</th>
+                                    <th style="color:#76C06C ">Action</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr th:each="tourImage : ${list}">
+                                    <td style="color:#76C06C "><span class="" th:text="${tourImage.id}"></span></td>
+                                    <td style="color:#76C06C "><img  class="img" width="100px" height="100px" th:src="@{/images/{image}(image=${tourImage.getImageUrl()})}"/></td>
+                                    <td style="color:#76C06C "><span class="" th:utext="${tourImage.getTourId().getName()}"></span></td>
+                                    <td style="color:#76C06C  " class="button-update update">
+                                        <div style="display: inline-block">
+                                            <button
+                                                id="updateBtn" class="update" style="border: 1px solid;border-radius: 8px;background: #007bff;color: white" th:data-id="${tourImage.id}" >Update</button>
+                                            <button
+                                                id="deleteBtn" data-href=""
+                                                class="button-delete delete"  style="border: 1px solid;border-radius: 8px;background: red;color: white" th:data-id="${tourImage.id}">Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

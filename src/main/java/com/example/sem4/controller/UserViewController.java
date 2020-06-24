@@ -12,6 +12,7 @@ import com.example.sem4.repository.UserRepository;
 import com.example.sem4.util.JwtUtil;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  *
@@ -42,11 +44,35 @@ public class UserViewController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @GetMapping("admin/users")
-    public String getAllUsers(ModelMap model) {
-        model.addAttribute("list", userRepository.findAll());
-        model.addAttribute("msg", "Hello");
-        return "listUsers";
+    @GetMapping("/admin")
+    public String login(Model model) {
+        model.addAttribute("msg", model.asMap().get("msg"));
+        return "login";
+    }
+
+    @PostMapping("/admin/login")
+    public String login(HttpServletRequest request, RedirectAttributes redirect, String email, String password) {
+        for (User user : userRepository.findAll()) {
+            if (email.toLowerCase().equals(user.getEmail()) && password.toLowerCase().equals(user.getPassword())) {
+                if (user.getRoleId().getName().equals("Admin")) {
+                    request.getSession().setAttribute("username", email);
+                    request.getSession().setAttribute("password", password);
+                    return "redirect:/admin/tours";
+                } else {
+                    redirect.addFlashAttribute("msg", "You have to be Administrator!!!");
+                    return "redirect:/admin";
+                }
+            }
+        }
+        redirect.addFlashAttribute("msg", "Invalid login!!!");
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().setAttribute("username", null);
+        request.getSession().setAttribute("password", null);
+        return "redirect:/admin";
     }
 
     @GetMapping("users/{id}")
@@ -56,7 +82,8 @@ public class UserViewController {
     }
 
     @PutMapping("admin/users/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Integer userId, @RequestBody User user) throws ResourceNotFoundException {
+    public ResponseEntity<User> updateUserById(@PathVariable(name = "id") Integer userId,
+            @RequestBody User user) throws ResourceNotFoundException {
         User currentUser = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Can not found user with a given id: " + userId));
         currentUser.setName(user.getName());
         currentUser.setEmail(user.getEmail());
@@ -95,7 +122,8 @@ public class UserViewController {
     }
 
     @PostMapping("/users/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody User user) throws Exception {
+    public ResponseEntity<?> signup(@Valid
+            @RequestBody User user) throws Exception {
         userRepository.save(user);
         String jwt = jwtUtil.generateToken(user.getEmail());
         Map<String, String> response = new HashMap<>();

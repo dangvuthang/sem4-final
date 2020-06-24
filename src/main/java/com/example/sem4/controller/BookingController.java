@@ -5,6 +5,7 @@
  */
 package com.example.sem4.controller;
 
+import com.example.sem4.dto.BookingDTO;
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.Booking;
 import com.example.sem4.model.Tour;
@@ -53,8 +54,8 @@ public class BookingController {
   private JwtUtil jwtUtil;
 
   @GetMapping(value = "bookings")
-  public ResponseEntity<?> getAllBookings() {
-    return ResponseEntity.ok().body(bookingRepository.findAll());
+  public List<Booking> getAllBookings() {
+    return bookingRepository.findAll();
   }
 
   @GetMapping(value = "bookings/{id}")
