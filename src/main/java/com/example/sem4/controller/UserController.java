@@ -212,10 +212,11 @@ public class UserController {
 //      byte[] bytes = model.getAvatarImage().getBytes();
 //      Files.write(path, bytes);
       imageName = UUID.randomUUID() + model.getAvatarImage().getOriginalFilename();
-      Path resourceDirectory = Paths.get("src", "main", "resources", "static", "images", imageName);
-      System.out.println(resourceDirectory);
+      Path resourceDirectory = Paths.get("src", "main", "resources", "static", "images");
+      String absolutePath = resourceDirectory.toFile().getAbsolutePath();
+      Path path = Paths.get(absolutePath + imageName);
       byte[] bytes = model.getAvatarImage().getBytes();
-      Files.write(resourceDirectory, bytes);
+      Files.write(path, bytes);
     }
     User u = new User();
     u.setEmail(model.getEmail());
