@@ -5,7 +5,6 @@
  */
 package com.example.sem4.controller;
 
-import com.example.sem4.dto.BookingDTO;
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.Booking;
 import com.example.sem4.model.Tour;
@@ -16,9 +15,12 @@ import com.example.sem4.repository.UserRepository;
 import com.example.sem4.util.JwtUtil;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -59,8 +62,14 @@ public class BookingController {
   }
 
   @GetMapping(value = "bookings/{id}")
-  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id, @RequestParam Optional<Boolean> upcoming, @RequestParam Optional<Boolean> past) {
     List<Booking> list = bookingRepository.findByUserId(new User(id));
+    if (upcoming.isPresent()) {
+      list = list.stream().filter(booking -> booking.getStartDate().after(new Date())).collect(Collectors.toList());
+    }
+    if (past.isPresent()) {
+      list = list.stream().filter(booking -> booking.getEndDate().before(new Date())).collect(Collectors.toList());
+    }
     return ResponseEntity.ok().body(list);
   }
 
