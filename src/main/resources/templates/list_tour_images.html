@@ -192,8 +192,6 @@ and open the template in the editor.
                     if (msg != null) {
                         alert(msg);
                     }
-                    $('#addForm').on('submit', function (e) {
-                    })
                     $('#createButton').on("click", function (e) {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
@@ -219,7 +217,7 @@ and open the template in the editor.
                         var spans = $(this).closest("tr").find("span");
                         $('#idUpdate').val(spans.eq(0).text());
                         $('#tourIdUpdate option:contains(' + spans.eq(1).text() + ')').attr('selected', 'selected');
-                        $('#imageUrlUpdate').val(img.attr('src').split('\/').pop());
+                        $('#imageUrlUpdate').val(img.attr('src'));
                         $('#imageCoverUpdate').attr('src', imgText);
                         $('#myModal').modal("show");
                         //                            End Fill data
@@ -333,7 +331,7 @@ and open the template in the editor.
                             <tbody>
                                 <tr th:each="tourImage : ${list}">
                                     <td style="color:#76C06C "><span class="" th:text="${tourImage.id}"></span></td>
-                                    <td style="color:#76C06C "><img  class="img" width="100px" height="100px" th:src="@{/images/{image}(image=${tourImage.getImageUrl()})}"/></td>
+                                    <td style="color:#76C06C "><img  class="img" width="100px" height="100px" th:src="@{${tourImage.getImageUrl()}}"/></td>
                                     <td style="color:#76C06C "><span class="" th:utext="${tourImage.getTourId().getName()}"></span></td>
                                     <td style="color:#76C06C  " class="button-update update">
                                         <div style="display: inline-block">

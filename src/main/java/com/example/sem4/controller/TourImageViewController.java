@@ -5,21 +5,20 @@
  */
 package com.example.sem4.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.Tour;
 import com.example.sem4.model.TourImage;
 import com.example.sem4.repository.TourImageRepository;
 import com.example.sem4.repository.TourRepository;
+import com.example.sem4.service.CloudinaryService;
 import com.example.sem4.util.JwtUtil;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
@@ -45,6 +44,9 @@ public class TourImageViewController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private CloudinaryService cloudinaryService;
+
     @GetMapping("/admin/tour_images")
     public String getAllTourImages(HttpServletRequest request, ModelMap model, Model attr) {
         if (request.getSession().getAttribute("username") == null) {
@@ -62,63 +64,69 @@ public class TourImageViewController {
     public String addTourImage(TourImage tourImage, RedirectAttributes redirect, MultipartFile file) throws ResourceNotFoundException {
         try {
             if (file.getOriginalFilename() != null) {
-                try {
-                    //    Get Path to save image
-                    String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
-                    Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + file.getOriginalFilename());
-                    byte[] bytes = file.getBytes();
-                    Files.write(path, bytes);
-                } catch (IOException ex) {
-                    redirect.addFlashAttribute("msg", "Failed!!!");
-                    return "redirect:/admin/tour_images";
-                }
+                Map result = cloudinaryService.upload(file);
+                String imageName = (String) result.get("url");
+                tourImage.setImageUrl(imageName);
             }
             if (tourImageRepository.save(tourImage) != null) {
-                redirect.addAttribute("msg", "Add success!!!");
+                redirect.addFlashAttribute("msg", "Add success!!!");
                 return "redirect:/admin/tour_images";
             } else {
-                redirect.addAttribute("msg", "Add failed!!!");
+                redirect.addFlashAttribute("msg", "Add failed!!!");
                 return "redirect:/admin/tour_images";
             }
         } catch (Exception e) {
-            redirect.addAttribute("msg", "Failed!!!");
+            redirect.addFlashAttribute("msg", "Failed!!!");
             return "redirect:/admin/tour_images";
         }
     }
 
     @PostMapping(value = "/admin/tour_images/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String updateTourImageById(TourImage tourImage, RedirectAttributes redirect, MultipartFile file) throws ResourceNotFoundException {
+    public String updateTourImageById(TourImage tourImage, RedirectAttributes redirect, MultipartFile file) throws ResourceNotFoundException, IOException {
         try {
-            if (file.getOriginalFilename() != null) {
-                try {
-                    //    Get Path to save image
-                    String rootPath = new FileSystemResource("").getFile().getAbsolutePath();
-                    Path path = Paths.get(rootPath + "/src/main/resources/static/images/" + file.getOriginalFilename());
-                    byte[] bytes = file.getBytes();
-                    Files.write(path, bytes);
-                } catch (IOException ex) {
-//                    redirect.addFlashAttribute("msg", "Failed!!!");
-//                    return "redirect:/admin/tour_images";
+            if (!tourImage.getImageUrl().contains("http")) {
+                if (file.getOriginalFilename() != null) {
+                    Map result = cloudinaryService.upload(file);
+                    String imageName = (String) result.get("url");
+                    tourImage.setImageUrl(imageName);
+                }
+                TourImage currentTourImage = tourImageRepository.findById(tourImage.getId()).get();
+                currentTourImage.setImageUrl(tourImage.getImageUrl());
+                Tour updateTour = tourRepository.findById(tourImage.getTourId().getId()).get();
+                if (updateTour != null) {
+                    currentTourImage.setTourId(updateTour);
+                } else {
+                    redirect.addFlashAttribute("msg", "Tour with id '" + tourImage.getTourId().getId() + "' not found!!!");
+                    return "redirect:/admin/tour_images";
+                }
+                if (tourImageRepository.save(currentTourImage) != null) {
+                    redirect.addFlashAttribute("msg", "Update success!!!");
+                    return "redirect:/admin/tour_images";
+                } else {
+                    redirect.addFlashAttribute("msg", "Update failed!!!");
+                    return "redirect:/admin/tour_images";
+                }
+            } else {
+                TourImage currentTourImage = tourImageRepository.findById(tourImage.getId()).get();
+                currentTourImage.setImageUrl(tourImage.getImageUrl());
+                Tour updateTour = tourRepository.findById(tourImage.getTourId().getId()).get();
+                if (updateTour != null) {
+                    currentTourImage.setTourId(updateTour);
+                } else {
+                    redirect.addFlashAttribute("msg", "Tour with id '" + tourImage.getTourId().getId() + "' not found!!!");
+                    return "redirect:/admin/tour_images";
+                }
+                if (tourImageRepository.save(currentTourImage) != null) {
+                    redirect.addFlashAttribute("msg", "Update success!!!");
+                    return "redirect:/admin/tour_images";
+                } else {
+                    redirect.addFlashAttribute("msg", "Update failed!!!");
+                    return "redirect:/admin/tour_images";
                 }
             }
-            TourImage currentTourImage = tourImageRepository.findById(tourImage.getId()).get();
-            currentTourImage.setImageUrl(tourImage.getImageUrl());
-            Tour updateTour = tourRepository.findById(tourImage.getTourId().getId()).get();
-            if (updateTour != null) {
-                currentTourImage.setTourId(updateTour);
-            } else {
-                redirect.addFlashAttribute("msg", "Tour with id '" + tourImage.getTourId().getId() + "' not found!!!");
-                return "redirect:/admin/tour_images";
-            }
-            if (tourImageRepository.save(currentTourImage) != null) {
-                redirect.addFlashAttribute("msg", "Update success!!!");
-                return "redirect:/admin/tour_images";
-            } else {
-                redirect.addFlashAttribute("msg", "Update failed!!!");
-                return "redirect:/admin/tour_images";
-            }
+
         } catch (Exception e) {
-            redirect.addAttribute("msg", "Failed!!!");
+            redirect.addFlashAttribute("msg", "Failed!!!");
             return "redirect:/admin/tour_images";
         }
     }
@@ -129,14 +137,14 @@ public class TourImageViewController {
             TourImage currentTourImage = tourImageRepository.findById(id).get();
             if (currentTourImage != null) {
                 tourImageRepository.delete(currentTourImage);
-                redirect.addAttribute("msg", "Delete success!!!");
+                redirect.addFlashAttribute("msg", "Delete success!!!");
                 return "redirect:/admin/tour_images";
             } else {
-                redirect.addAttribute("msg", "Delete failed!!!");
+                redirect.addFlashAttribute("msg", "Delete failed!!!");
                 return "redirect:/admin/tour_images";
             }
         } catch (Exception e) {
-            redirect.addAttribute("msg", "Failed!!");
+            redirect.addFlashAttribute("msg", "Failed!!");
             return "redirect:/admin/tour_images";
         }
     }

@@ -83,7 +83,7 @@ public class StatisticsViewController {
     }
 
     @PostMapping("/admin/bookings/report")
-    public String Top5BookingReport(HttpServletRequest request, HttpServletResponse response, String from, String to, ModelMap model, RedirectAttributes redirect) throws IOException, ParseException {
+    public void Top5BookingReport(HttpServletRequest request, HttpServletResponse response, String from, String to, ModelMap model, RedirectAttributes redirect) throws IOException, ParseException {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
@@ -92,10 +92,6 @@ public class StatisticsViewController {
             List<BookingDTO> list = bookingRepository.retrieveBookingAsDTO(fromDate, toDate);
             List<BookingDTO> listi = new ArrayList<>();
             Double Total = 0.0;
-            if (list.isEmpty()) {
-                redirect.addFlashAttribute("msg", "No data for date from: " + from + " to " + to);
-                return "redirect:/admin/statistics";
-            }
             if (list.size() < 5) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getDiscount().intValue() > 0) {
@@ -129,24 +125,24 @@ public class StatisticsViewController {
             params.put("Top5DataSource", ds);
             params.put("from", format2.format(fromDate));
             params.put("to", format2.format(toDate));
-            params.put("image", "src/main/resources/static/images/logo_330x330.png");
+            params.put("image", "https://res.cloudinary.com/dcwm5m9ml/image/upload/v1593107276/logo2_1200x1200_r4zicg.png");
 
             JasperPrint jprint = JasperFillManager.fillReport(jreport, params, new JREmptyDataSource());
             response.setContentType("application/pdf");
-            response.addHeader("Content-disposition", "filename=BookingReport.pdf");
+            response.addHeader("Content-disposition", "attachment; filename=BookingReport.pdf");
             OutputStream out = response.getOutputStream();
-            JasperExportManager.exportReportToPdfStream(jprint, out);
+            JasperExportManager.exportReportToPdfStream(jprint,out);
 //            JasperExportManager.exportReportToPdfFile(jprint,
 //                    "src/main/resources/report1.pdf");
 
         } catch (JRException ex) {
-            return "redirect:/admin/statistics";
+//            return "redirect:/admin/statistics";
         }
-        return null;
+//        return null;
     }
 
     @PostMapping("/admin/bookings/reportHTML")
-    public String Top5BookingReportHTML(HttpServletRequest request, HttpServletResponse response, String from, String to, ModelMap model, RedirectAttributes redirect) throws IOException, ParseException {
+    public void Top5BookingReportHTML(HttpServletRequest request, HttpServletResponse response, String from, String to, ModelMap model, RedirectAttributes redirect) throws IOException, ParseException {
         try {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat format2 = new SimpleDateFormat("dd/MM/yyyy");
@@ -155,10 +151,6 @@ public class StatisticsViewController {
             List<BookingDTO> list = bookingRepository.retrieveBookingAsDTO(fromDate, toDate);
             List<BookingDTO> listi = new ArrayList<>();
             Double Total = 0.0;
-//            if (list.isEmpty()) {
-//                redirect.addFlashAttribute("msg", "No data for date from: " + from + " to " + to);
-//                return "redirect:/admin/statistics";
-//            }
             if (list.size() < 5) {
                 for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getDiscount().intValue() > 0) {
@@ -188,19 +180,17 @@ public class StatisticsViewController {
             params.put("Top5DataSource", ds);
             params.put("from", format2.format(fromDate));
             params.put("to", format2.format(toDate));
-            params.put("image", "src/main/resources/static/images/logo_330x330.png");
+            params.put("image", "https://res.cloudinary.com/dcwm5m9ml/image/upload/v1593107276/logo2_1200x1200_r4zicg.png");
             response.setContentType("text/html");
-            InputStream is=this.getClass().getResourceAsStream(report);
-            JasperReport jasperReport=JasperCompileManager.compileReport(report);
-            JasperPrint jasperPrint=JasperFillManager.fillReport(jasperReport, params,new JREmptyDataSource());
-            HtmlExporter htmlExporter=new HtmlExporter(DefaultJasperReportsContext.getInstance());
+            InputStream is = this.getClass().getResourceAsStream(report);
+            JasperReport jasperReport = JasperCompileManager.compileReport(report);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, new JREmptyDataSource());
+            HtmlExporter htmlExporter = new HtmlExporter(DefaultJasperReportsContext.getInstance());
             htmlExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
             htmlExporter.setExporterOutput(new SimpleHtmlExporterOutput(response.getWriter()));
             htmlExporter.exportReport();
         } catch (Exception ex) {
-//            return "redirect:/admin/statistics";
         }
-        return null;
     }
 
 }
