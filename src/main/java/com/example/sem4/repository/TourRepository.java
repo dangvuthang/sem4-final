@@ -5,7 +5,9 @@
  */
 package com.example.sem4.repository;
 
+import com.example.sem4.model.Guide;
 import com.example.sem4.model.Tour;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -15,4 +17,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  */
 public interface TourRepository extends JpaRepository<Tour, Integer>, JpaSpecificationExecutor<Tour> {
 
+  List<Tour> findByGuideId(Guide guide);
 }
