@@ -47,7 +47,6 @@ public class Guide {
   @Column(name = "rating_average")
   private BigDecimal ratingAverage;
 
-  @NotNull
   @Column(name = "is_guide", columnDefinition = "boolean default true")
   private boolean isGuide;
 
