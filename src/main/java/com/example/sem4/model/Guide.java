@@ -36,7 +36,7 @@ public class Guide {
   private Integer id;
 
   @NotNull
-  @Column(name = "description")
+  @Column(name = "description", columnDefinition = "TEXT")
   private String description;
 
   @NotNull
@@ -46,6 +46,9 @@ public class Guide {
   @NotNull
   @Column(name = "rating_average")
   private BigDecimal ratingAverage;
+
+  @Column(name = "is_guide", columnDefinition = "boolean default true")
+  private boolean isGuide;
 
   @JoinColumn(name = "user_id", referencedColumnName = "id")
   @ManyToOne(optional = false)
@@ -66,11 +69,12 @@ public class Guide {
     this.id = id;
   }
 
-  public Guide(Integer id, String description, int numberOfRatings, BigDecimal ratingAverage) {
+  public Guide(Integer id, String description, int numberOfRatings, BigDecimal ratingAverage, boolean isGuide) {
     this.id = id;
     this.description = description;
     this.numberOfRatings = numberOfRatings;
     this.ratingAverage = ratingAverage;
+    this.isGuide = isGuide;
   }
 
   public Integer getId() {
@@ -111,6 +115,14 @@ public class Guide {
 
   public void setUserId(User userId) {
     this.userId = userId;
+  }
+
+  public boolean isIsGuide() {
+    return isGuide;
+  }
+
+  public void setIsGuide(boolean isGuide) {
+    this.isGuide = isGuide;
   }
 
   public Collection<ReviewGuide> getReviewGuideCollection() {

@@ -6,6 +6,8 @@
 package com.example.sem4.repository;
 
 import com.example.sem4.model.Guide;
+import com.example.sem4.model.User;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -13,5 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author MyPC
  */
 public interface GuideRepository extends JpaRepository<Guide, Integer> {
-    
+
+  Optional<Guide> findByUserId(User user);
 }

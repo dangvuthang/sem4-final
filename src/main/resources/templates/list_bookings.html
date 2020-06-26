@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="https://www.thymeleaf.org/"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{main_layout.html}">
+    <head>
+        <title>Admin/Tour Types - TRAVEL ToVN</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" sizes="76x76" th:href="@{/images/logo_32x32.png}">
+    </head>
+    <body>
+        <div layout:fragment="sidebar-link">
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Tour Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tours}" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <span>Tours</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Utilities Collapse Menu -->
+            <li class="nav-item active">
+                <a class="nav-link " th:href="@{/admin/locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Locations</span>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link " th:href="@{/admin/tour_locations}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Location</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_types}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Types</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/tour_images}" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
+                    <span>Tour Images</span>
+                </a>
+            </li>
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                User Management
+            </div>
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/roles}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Roles</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/users}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " th:href="@{/admin/bookings}" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
+                    <span>Bookings</span>
+                </a>
+            </li>
+            <!-- Nav Item - Charts -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/guides}">
+                    <span>Guides</span></a>
+            </li>
+
+            <!-- Nav Item - Tables -->
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/admin/statistics}">
+                    <span>Statistics</span></a>
+            </li>
+        </div>
+        <!-- The Modal Update -->
+            <div   class="modal" id="updateModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="update">
+                        <form id="updateForm" th:action="@{/admin/bookings/update}" method="post" >
+                            <div class="modal-header">
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Booking</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="text" id="idUpdate" name="id" class="form-control" th:value="${id}" hidden="true">
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="createdAt">Created At:</label>
+                                    <input type="date" id="createdAtUpdate" name="created_at" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="startDate">Start Date:</label>
+                                    <input type="date" id="startDateUpdate" name="start_Date" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="endDate">End Date:</label>
+                                    <input type="date" id="endDateUpdate" name="end_Date" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" id="isCancelledUpdate" name="is_cancelled" class="form-control" th:value="${isCancelled}" value="false" hidden="true">
+                                </div>
+                              
+                                
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="price">Price:</label>
+                                    <input type="number" id="priceUpdate" name="price" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="quantity">Quantity:</label>
+                                    <input type="text" id="quantityUpdate" name="quantity" class="form-control" required>
+                                </div>
+                                
+                               <div class="form-group">
+                                    <label style="color:#76C06C" th:for="tourID" >Tour</label>
+                                    <select name="tourId"  id="userIdUpdate" class="form-control" required>
+                                        <option >Select Guide</option> 
+                                        <option th:each="tour : ${listTour}" th:value="${tour.id}" th:utext="${tour.getTourId().getName()}"></option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="userID" >User</label>
+                                    <select name="userId"  id="userIdUpdate" class="form-control" required>
+                                        <option >Select Guide</option> 
+                                        <option th:each="user : ${listUser}" th:value="${user.id}" th:utext="${user.getUserId().getName()}"></option>
+                                    </select>
+                                </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit"  class="btn btn-success" value="Edit">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Update-->
+            <script type="text/javascript" th:inline='javascript'>
+                $(document).ready(function (e) {
+
+
+                    /*<![CDATA[*/
+                    var msg = /*[[${msg}]]*/;
+                    /*]]>*/
+                    if (msg != null) {
+                        alert(msg);
+                    }
+                    $('#addForm').on('submit', function (e) {
+                    })
+                    $('#createButton').on("click", function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        $('input[type=text]').val('');
+                        $('input[type=number]').val('');
+                        $('input[type=date]').val('');
+                        $('textarea').val('');
+                        $('select').val('');
+                        $('#addModal .modal-content').find('#add').css('display', 'block');
+                        $('#updateModal .modal-content').find('#update').css('display', 'none');
+                        $('#deleteModal .modal-content').find('#delete').css('display', 'none');
+                        $('#addModal').modal('show');
+
+                    });
+                    $(".update").on("click", function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        var origin = window.location.origin;
+                        //Fill data
+                        var spans = $(this).closest("tr").find("span");
+                        var id = spans.eq(0).text();
+                        $.ajax({
+                            url: origin + "/admin/bookings/" + id,
+                            type: 'GET',
+                            crossDomain: true,
+                            dataType: 'json',
+                            contentType: 'application/json',
+                            success: function (data) {
+                                //called when successful
+                                var result = JSON.stringify(data);
+                                var list = JSON.parse(result);
+                                $('#idUpdate').val(list.id);
+                                
+                                $('#createdAtUpdate').val(list.createdAt);
+                                $('#startDateUpdate').val(list.startDate);
+                                $('#endDateUpdate').val(list.endDate);
+                                $('#priceUpdate').val(list.price);
+                                $('#quantityUpdate').val(list.quantity);
+                                $('#tourIdUpdate option:contains(' + list.tourId.name + ')').attr('selected', 'selected');
+                                $('#userIdUpdate option:contains(' + list.userId.name + ')').attr('selected', 'selected');
+                                //.val(list.tourId.id);
+                                $('#updateModal .modal-content').find('#update').css('display', 'block');
+                                $('#addModal .modal-content').find('#add').css('display', 'none');
+                                $('#deleteModal .modal-content').find('#delete').css('display', 'none');
+                                $('#updateModal').modal('show');
+                                $('#myModal').modal("show");
+                                $('#updateModal').on('shown.bs.modal', function (event) {
+                                    // reset the scroll to top
+                                    $('#updateModal .modal-body').scrollTop(0);
+                                });
+                            },
+                            error: function (e) {
+                                //called when there is an error
+                                console.log(e.message);
+                            }
+                        });
+                    });
+             
+            </script>
+        
+        <!--Table-->
+        <div layout:fragment="content">
+
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">LIST OF Booking</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%;color:#76C06C">ID</th>
+                                    <th style="color:#76C06C ">Tour</th>
+                                    <th style="color:#76C06C ">Cancelled</th>
+                                    <th style="color:#76C06C ">Price</th>
+                                    <th style="color:#76C06C ">Quantity</th>
+                                    <th style="color:#76C06C ">Create Date</th>
+                                    <th style="color:#76C06C ">Start Date</th>
+                                    <th style="color:#76C06C ">End Date</th>
+<!--                                    <th style="color:#76C06C ">Action</th>-->
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th style="width: 10%;color:#76C06C">ID</th>
+                                    <th style="color:#76C06C ">Tour</th>
+                                    <th style="color:#76C06C ">Cancelled</th>
+                                    <th style="color:#76C06C ">Price</th>
+                                    <th style="color:#76C06C ">Quantity</th>
+                                    <th style="color:#76C06C ">Create Date</th>
+                                    <th style="color:#76C06C ">Start Date</th>
+                                    <th style="color:#76C06C ">End Date</th>
+<!--                                    <th style="color:#76C06C ">Action</th>-->
+                                </tr>
+
+                            </tfoot>
+                            <tbody>
+                                <tr th:each="bookings : ${list}">
+                                    <td style="color:#76C06C"><span class="" th:text="${bookings.id}"></span></td>
+                                    <td style="color:#76C06C "><span class="" th:text="${bookings.getTourId().getName()}"></span></td>
+                                   <td style="color:#76C06C "><input class="ch" type="checkbox" th:checked="${bookings.getIsCancelled()}?'true':'false'"/></td>
+                                    <td style="color:#76C06C "><span class="" th:text="${bookings.price}"></span></td>
+                                    <td style="color:#76C06C "><span class="" th:text="${bookings.quantity}"></span></td>
+                                    <td style="color:#76C06C "><span class="" th:text="${bookings.createdAt}"></span></td>
+                                    <td style="color:#76C06C "><span th:text="${bookings.startDate}"></span></td>
+                                    <td style="color:#76C06C "><span th:text="${bookings.endDate}"></span></td>
+<!--                                     <td style="color:#76C06C  " class="button-update update">
+                                        <div style="display: inline-block">
+                                            <button
+                                                id="updateBtn" class="update" style="border: 1px solid;border-radius: 8px;background: #007bff;color: white" th:data-id="${bookings.id}" >Update</button>
+                                            
+                                        </div>
+                                    </td>-->
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+   
+</body>
+</html>

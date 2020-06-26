@@ -5,20 +5,24 @@
  */
 package com.example.sem4.controller;
 
-import com.example.sem4.dto.BookingDTO;
 import com.example.sem4.exception.ResourceNotFoundException;
 import com.example.sem4.model.Booking;
+import com.example.sem4.model.Guide;
 import com.example.sem4.model.Tour;
 import com.example.sem4.model.User;
 import com.example.sem4.repository.BookingRepository;
+import com.example.sem4.repository.GuideRepository;
 import com.example.sem4.repository.TourRepository;
 import com.example.sem4.repository.UserRepository;
 import com.example.sem4.util.JwtUtil;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +35,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -48,7 +53,7 @@ public class BookingController {
   private TourRepository tourRepository;
 
   @Autowired
-  private AuthenticationManager authenticationManager;
+  private GuideRepository guideRepository;
 
   @Autowired
   private JwtUtil jwtUtil;
@@ -59,8 +64,14 @@ public class BookingController {
   }
 
   @GetMapping(value = "bookings/{id}")
-  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id) {
+  public ResponseEntity<?> getAllBookingsOfUser(@PathVariable(name = "id") Integer id, @RequestParam Optional<Boolean> upcoming, @RequestParam Optional<Boolean> past) {
     List<Booking> list = bookingRepository.findByUserId(new User(id));
+    if (upcoming.isPresent()) {
+      list = list.stream().filter(booking -> booking.getStartDate().after(new Date())).collect(Collectors.toList());
+    }
+    if (past.isPresent()) {
+      list = list.stream().filter(booking -> booking.getEndDate().before(new Date())).collect(Collectors.toList());
+    }
     return ResponseEntity.ok().body(list);
   }
 
@@ -100,18 +111,50 @@ public class BookingController {
       response.put("message", "Only " + (tour.getMaxGroupSize() - tour.getCurrentGroupSize()) + " spots left");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+    Date chosenTourStartDate = tour.getStartDate();
+    Date chosenTourEndDate = tour.getEndDate();
+
+//   Check if user is a guide
+    if (currentUser.getRoleId().getId() == 2) {
+//      Check if a guide book his/her own guide
+      Guide guide = guideRepository.findByUserId(new User(currentUser.getId())).orElseThrow(() -> new ResourceNotFoundException("Can not found guide with a given id " + tourId));
+      if (guide.getId() == tour.getGuideId().getId()) {
+        response.put("status", "fail");
+        response.put("message", "You can not book your own tour.");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+//      Check if the current tour date coincide which the guide's schedule
+      Stream<Tour> listOfToursByGuide = tourRepository.findByGuideId(new Guide(guide.getId())).stream();
+      boolean result1 = listOfToursByGuide.anyMatch(tourSchedule -> {
+        Date scheduleStartDate = tourSchedule.getStartDate();
+        Date scheduleEndDate = tourSchedule.getStartDate();
+        boolean isCoincide = chosenTourStartDate.compareTo(scheduleStartDate) * scheduleStartDate.compareTo(chosenTourEndDate) >= 0 || chosenTourStartDate.compareTo(scheduleEndDate) * scheduleEndDate.compareTo(chosenTourEndDate) >= 0;
+        return isCoincide;
+      });
+      if (result1) {
+        response.put("status", "fail");
+        response.put("message", "This tour date is coincide with your schedule");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+    }
 //    Check if user has already booked this tour
     Stream<Booking> list1 = bookingRepository.findByUserId(new User(currentUser.getId())).stream();
-    Stream<Booking> result1 = list1.filter(booking -> booking.getTourId().getId() == tourId && booking.getStartDate().equals(tour.getStartDate()));
-    if (result1.count() == 1) {
+    boolean result1 = list1.anyMatch(booking -> booking.getTourId().getId() == tourId && booking.getStartDate().equals(tour.getStartDate()));
+    if (result1) {
       response.put("status", "fail");
       response.put("message", "You have already booked this tour.");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 //  Check if within the new tour booked, there is any date that will coincide
     Stream<Booking> list2 = bookingRepository.findByUserId(new User(currentUser.getId())).stream();
-    Stream<Booking> result2 = list2.filter(booking -> (tour.getStartDate().after(booking.getStartDate()) && tour.getEndDate().before(booking.getEndDate()) || (tour.getEndDate().after(booking.getStartDate()) && tour.getEndDate().before(booking.getEndDate()))));
-    if (result2.count() > 0) {
+    boolean result2 = list2.anyMatch(booking -> {
+      Date bookingTourStartDate = booking.getStartDate();
+      Date bookingTourEndDate = booking.getEndDate();
+      boolean isCoincide = chosenTourStartDate.compareTo(bookingTourStartDate) * bookingTourStartDate.compareTo(chosenTourEndDate) >= 0 || chosenTourStartDate.compareTo(bookingTourEndDate) * bookingTourEndDate.compareTo(chosenTourEndDate) >= 0;
+      return isCoincide;
+    });
+    if (result2) {
       response.put("status", "fail");
       response.put("message", "The tour is coincide with one of your upcoming tour");
       return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
