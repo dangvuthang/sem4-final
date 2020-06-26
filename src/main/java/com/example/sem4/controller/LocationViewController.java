@@ -6,8 +6,10 @@
 package com.example.sem4.controller;
 
 import com.example.sem4.exception.ResourceNotFoundException;
+import com.example.sem4.model.Booking;
 import com.example.sem4.model.Location;
 import com.example.sem4.model.TourLocation;
+import com.example.sem4.repository.BookingRepository;
 import com.example.sem4.repository.LocationRepository;
 import com.example.sem4.repository.TourLocationRepository;
 import com.example.sem4.util.JwtUtil;
@@ -38,6 +40,9 @@ public class LocationViewController {
     private TourLocationRepository tourLocationRepository;
 
     @Autowired
+    private BookingRepository bookingRepository;
+
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -59,9 +64,9 @@ public class LocationViewController {
     public String addLocation(Location location, RedirectAttributes redirect) throws ResourceNotFoundException {
         try {
             for (Location l : locationRepository.findAll()) {
-                if (l.getName().toLowerCase().equals(location.getName().toLowerCase())) {
+                if (l.getName().toLowerCase().trim().equals(location.getName().toLowerCase().trim())) {
                     redirect.addFlashAttribute("msg", "Location with name '" + location.getName() + "' existed!!!");
-                    return "redirect:/admin/tours";
+                    return "redirect:/admin/locations";
                 }
             }
             if (locationRepository.save(location) != null) {
@@ -104,6 +109,16 @@ public class LocationViewController {
             Location currentLocation = locationRepository.findById(id).get();
             if (currentLocation != null) {
                 if (currentLocation.isIsActive()) {
+                    for (TourLocation tourLocation : tourLocationRepository.findAll()) {
+                        for (Booking booking : bookingRepository.findAll()) {
+                            if (booking.getTourId().getId() == tourLocation.getTourId().getId()
+                                    && (booking.getStartDate().getTime() >= tourLocation.getTourId().getStartDate().getTime()
+                                    && booking.getEndDate().getTime() <= tourLocation.getTourId().getEndDate().getTime())) {
+                                redirect.addFlashAttribute("msg", "Can't deactive because tour booked!!!");
+                                return "redirect:/admin/locations";
+                            }
+                        }
+                    }
                     currentLocation.setIsActive(false);
                     locationRepository.save(currentLocation);
                     redirect.addFlashAttribute("msg", "Deactive success!!!");

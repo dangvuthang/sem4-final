@@ -63,7 +63,7 @@
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="67" splitType="Stretch">
+		<band height="73" splitType="Stretch">
 			<staticText>
 				<reportElement x="20" y="41" width="120" height="15" uuid="8bdf1062-adf5-4556-a796-4a25d85ebfe7"/>
 				<text><![CDATA[4th Semeter - Project]]></text>
@@ -77,8 +77,11 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="490" y="8" width="50" height="50" uuid="9d72198a-c4a0-414c-b157-09607bfe334f"/>
+			<image isLazy="true">
+				<reportElement x="475" y="3" width="70" height="70" uuid="9d72198a-c4a0-414c-b157-09607bfe334f">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<imageExpression><![CDATA[$P{image}]]></imageExpression>
 			</image>
 			<staticText>

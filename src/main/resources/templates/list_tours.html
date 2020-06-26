@@ -113,13 +113,55 @@ and open the template in the editor.
                 </div>
             </div>
             <!--End Modal Delete-->
+            <!-- The Modal Reset Tour -->
+            <div   class="modal" id="resetModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog"  role="document" >
+                    <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="reset">
+                        <form th:action="@{/admin/tours/reset}" method="post" id="resetForm">
+                            <div class="modal-header">
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Reset Tour</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input type="text" id="idReset" name="id" class="form-control" th:value="${id}" hidden="true">
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="name">Name:</label>
+                                    <input type="text" id="nameReset" name="name" class="form-control" disabled="true">
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="currentGroupSize">Current Group Size</label>
+                                    <input type="number" id="currentGroupSizeReset" name="currentGroupSize" class="form-control" disabled="true">
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="startDate">Start Date:</label>
+                                    <input type="date" id="startDateReset" name="start_Date" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="endDate">End Date:</label>
+                                    <input type="date" id="endDateReset" name="end_Date" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="duration">Duration:</label>
+                                    <input type="number" id="durationReset" name="duration" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+                                <input type="submit"  class="btn btn-success" value="Reset">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--End Modal Reset Tour-->
             <!-- The Modal Update -->
             <div   class="modal" id="updateModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog"  role="document" >
                     <div class="modal-content" style="border-collapse: separate;border-radius: 15px" id="update">
-                        <form id="updateForm" th:action="@{/admin/tours/update}" method="post" >
+                        <form id="updateForm" th:action="@{/admin/tours/update}" enctype="multipart/form-data" method="post" >
                             <div class="modal-header">
-                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Tours</h4>
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Update Tour</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -138,15 +180,16 @@ and open the template in the editor.
                                     <input type="date" id="endDateUpdate" name="end_Date" class="form-control" required>
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" id="activeUpdate" name="active" class="form-control" value="true" hidden="true">
-                                </div>
-                                <div class="form-group">
                                     <label style="color:#76C06C" th:for="duration">Duration:</label>
                                     <input type="number" id="durationUpdate" name="duration" class="form-control" required>
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="maxGroupSize">Max Group Size:</label>
                                     <input type="number" id="maxGroupSizeUpdate" name="maxGroupSize" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="color:#76C06C" th:for="currentGroupSize">Current Group Size:</label>
+                                    <input type="number" id="currentGroupSize" class="form-control" disabled="true">
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="price">Price:</label>
@@ -198,9 +241,9 @@ and open the template in the editor.
             <div   class="modal" id="addModal"  tabindex="9999" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog"  role="document" >
                     <div class="modal-content" id="add">
-                        <form id="addForm" th:action="@{/admin/tours}" method="post" >
+                        <form id="addForm" th:action="@{/admin/tours}" enctype="multipart/form-data" method="post" >
                             <div class="modal-header">
-                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Add Users</h4>
+                                <h4 style="color:#76C06C;font-weight: bold;font-size: 20px " class="modal-title" id="myModalLabel">Add Tour</h4>
                             </div>
                             <div class="modal-body">
                                 <div class="form-group">
@@ -214,9 +257,6 @@ and open the template in the editor.
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="endDate">End Date:</label>
                                     <input type="date" id="endDateAdd" name="end_Date" class="form-control" required/>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" id="activeAdd" name="active" class="form-control" value="true" hidden="true">
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="duration">Duration:</label>
@@ -275,49 +315,239 @@ and open the template in the editor.
 
             <script type="text/javascript" th:inline='javascript'>
                 $(document).ready(function (e) {
-                    $('#durationAdd').change(function (e) {
-                        var val = $(this).val();
-                        var endDate = $('#endDateAdd').val();
-                        var startDate = $('#startDateAdd').val();
-                        if (endDate !== '' && startDate !== '') {
-                            if (new Date(endDate).getDate() - new Date(startDate).getDate() > val ||
-                                    new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
-                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
-                                $(':input[type="submit"]').attr('disabled', true);
-                            }
-                            if (new Date(endDate).getDate() - new Date(startDate).getDate() == val) {
-                                $(':input[type="submit"]').prop('disabled', false);
-                            }
-                        }
-                    });
-                    $('#durationUpdate').change(function (e) {
-                        var val = $(this).val();
-                        var endDate = $('#endDateAdd').val();
-                        var startDate = $('#startDateAdd').val();
-                        if (endDate !== '' && startDate !== '') {
-                            if (new Date(endDate).getDate() - new Date(startDate).getDate() > val ||
-                                    new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
-                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
-                                $(':input[type="submit"]').attr('disabled', true);
-                            }
-                            if (new Date(endDate).getDate() - new Date(startDate).getDate() == val) {
-                                $(':input[type="submit"]').prop('disabled', false);
-                            }
-                        }
-                    });
-                    $('#priceDiscountAdd').change(function (e) {
-                        var val = $(this).val();
-                        if (val > 100 || val < 0) {
-                            alert('Discount must be from 1 to 100!!!');
+                    $('#addForm').submit(function (e) {
+                        var count = 0;
+                        if ($('#nameAdd').val().length > 30) {
+                            alert('Tour Name must be from 1 to 20 characters');
                             $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                            count = 0;
+                        }
+
+                        if ($('#priceAdd').val() > 10000 || $('#priceAdd').val() <= 0) {
+                            alert('Discount must be from 1 to 10000!!!');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                            count = 0;
+                        }
+
+                        if ($('#priceDiscountAdd').val() > 100 || $('#priceDiscountAdd').val() < 0) {
+                            alert('Discount must be from 0 to 100!!!');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                            count = 0;
+                        }
+                        if ($('#maxGroupSizeAdd').val() <= 0 || $('#maxGroupSizeAdd').val() > 100) {
+                            alert('Max Group Size must be from 1 to 100');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                            count = 0;
+                        }
+                        var val = $('#durationAdd').val();
+                        var endDate = $('#endDateAdd').val();
+                        var startDate = $('#startDateAdd').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (val < 0) {
+                                alert("Duration must be positive number!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                return false;
+                            } else if (new Date(endDate).getDate() - new Date(startDate).getDate() > val && count === 0) {
+
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            } else if (new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                count++;
+                            } else if (new Date(endDate).getDate() - new Date(startDate).getDate() == val) {
+                                count = 0;
+                                $(':input[type="submit"]').prop('disabled', false);
+                            }
+                        }
+                        var endDate = $('#endDateAdd').val();
+                        var startDate = $('#startDateAdd').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (new Date(endDate).getYear() - new Date(startDate).getYear() !== 0) {
+                                alert('Start year and End year must be in same year');
+                                $(':input[type="submit"]').attr('disabled', true);
+                                count++;
+                            } else {
+                                if (new Date(endDate).getMonth() - new Date(startDate).getMonth() !== 0) {
+                                    alert('Start month and End month must be in same month');
+                                    $(':input[type="submit"]').attr('disabled', true);
+                                    count++;
+                                } else {
+                                    if (new Date(endDate) <= new Date(startDate)) {
+                                        alert("Start date must be less than End date!!!");
+                                        $(':input[type="submit"]').attr('disabled', true);
+                                        count++;
+                                    }
+                                    if (new Date(endDate) > new Date(startDate)) {
+                                        $(':input[type="submit"]').prop('disabled', false);
+                                        count = 0;
+                                    }
+                                }
+                            }
+                        }
+                        if (count > 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    })
+                    $('#updateForm').submit(function (e) {
+
+                        var count = 0;
+                        if ($('#nameUpdate').val().length > 30) {
+                            alert('Tour Name must be from 1 to 20 characters');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
                         } else {
                             $(':input[type="submit"]').attr('disabled', false);
                         }
+
+                        if ($('#priceUpdate').val() > 10000 || $('#priceUpdate').val() <= 0) {
+                            alert('Discount must be from 1 to 10000!!!');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                        }
+
+                        if ($('#priceDiscountUpdate').val() > 100 || $('#priceDiscountUpdate').val() < 0) {
+                            alert('Discount must be from 0 to 100!!!');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                        }
+                        if ($('#maxGroupSizeUpdate').val() <= 0 || $('#maxGroupSizeUpdate').val() > 100) {
+                            alert('Max Group Size must be from 1 to 100');
+                            $(':input[type="submit"]').attr('disabled', true);
+                            count++;
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                        }
+                        var val = $('#durationUpdate').val();
+                        var endDate = $('#endDateUpdate').val();
+                        var startDate = $('#startDateUpdate').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (val < 0) {
+                                alert("Duration must be positive number!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                return false;
+                            } else if (new Date(endDate).getDate() - new Date(startDate).getDate() > val && count === 0) {
+
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            } else if (new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                count++;
+                            } else if (new Date(endDate).getDate() - new Date(startDate).getDate() === val) {
+                                $(':input[type="submit"]').prop('disabled', false);
+                            }
+                        }
+                        var endDate = $('#endDateUpdate').val();
+                        var startDate = $('#startDateUpdate').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (new Date(endDate).getYear() - new Date(startDate).getYear() !== 0) {
+                                alert('Start year and End year must be in same year');
+                                $(':input[type="submit"]').attr('disabled', true);
+                                count++;
+                            } else {
+                                if (new Date(endDate).getMonth() - new Date(startDate).getMonth() !== 0) {
+                                    alert('Start month and End month must be in same month');
+                                    $(':input[type="submit"]').attr('disabled', true);
+                                    count++;
+                                } else {
+                                    if (new Date(endDate) <= new Date(startDate)) {
+                                        alert("Start date must be less than End date!!!");
+                                        $(':input[type="submit"]').attr('disabled', true);
+                                        count++;
+                                    }
+                                    if (new Date(endDate) > new Date(startDate)) {
+                                        $(':input[type="submit"]').prop('disabled', false);
+                                    }
+                                }
+                            }
+                        }
+                        if (count > 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
                     });
-                    $('#priceDiscountUpdate').change(function (e) {
-                        var val = $(this).val();
-                        if (val > 100 || val < 0) {
-                            alert('Discount must be from 1 to 100!!!');
+                    $('#resetForm').submit(function (e) {
+                        var count = 0;
+                        var endDate = $('#endDateReset').val();
+                        var startDate = $($('#startDateReset')).val();
+                        if (endDate !== '') {
+                            if (new Date(endDate).getYear() - new Date(startDate).getYear() !== 0) {
+                                alert('Start year and End year must be in same year');
+                                $(':input[type="submit"]').attr('disabled', true);
+                            } else {
+                                if (new Date(endDate).getMonth() - new Date(startDate).getMonth() !== 0) {
+                                    alert('Start month and End month must be in same month');
+                                    $(':input[type="submit"]').attr('disabled', true);
+                                } else {
+                                    if (new Date(endDate) <= new Date(startDate)) {
+                                        alert("Start date must be less than End date!!!");
+                                        $(':input[type="submit"]').attr('disabled', true);
+                                    }
+                                    if (new Date(endDate) > new Date(startDate)) {
+                                        $(':input[type="submit"]').prop('disabled', false);
+                                    }
+                                }
+                            }
+                        }
+                        var val = $('#durationReset').val();
+                        var endDate = $('#endDateReset').val();
+                        var startDate = $('#startDateReset').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (val < 0) {
+                                alert("Duration must be positive number!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                return false;
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() > val && count === 0) {
+
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() === val) {
+                                count = 0;
+                                $(':input[type="submit"]').prop('disabled', false);
+                            }
+                        }
+                        if (count > 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                    $('#nameAdd').keyup(function (e) {
+                        var val = $(this).val().length;
+                        if (val > 30) {
+                            alert('Tour Name must be from 1 to 20 characters');
                             $(':input[type="submit"]').attr('disabled', true);
                         } else {
                             $(':input[type="submit"]').attr('disabled', false);
@@ -325,20 +555,56 @@ and open the template in the editor.
                     });
                     $('#priceAdd').change(function (e) {
                         var val = $(this).val();
-                        if (val > 10000 || val < 0) {
+                        if (val > 10000 || val <= 0) {
                             alert('Discount must be from 1 to 10000!!!');
                             $(':input[type="submit"]').attr('disabled', true);
                         } else {
                             $(':input[type="submit"]').attr('disabled', false);
                         }
                     });
-                    $('#priceUpdate').change(function (e) {
+                    $('#priceDiscountAdd').change(function (e) {
                         var val = $(this).val();
-                        if (val > 10000 || val < 0) {
-                            alert('Discount must be from 1 to 10000!!!');
+                        if (val > 100 || val < 0) {
+                            alert('Discount must be from 0 to 100!!!');
                             $(':input[type="submit"]').attr('disabled', true);
                         } else {
                             $(':input[type="submit"]').attr('disabled', false);
+                        }
+                    });
+                    $('#maxGroupSizeAdd').change(function (e) {
+                        var val = $(this).val();
+                        if (val <= 0 || val > 100) {
+                            alert('Max Group Size must be from 1 to 100');
+                            $(':input[type="submit"]').attr('disabled', true);
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                        }
+                    })
+                    $('#durationAdd').change(function (e) {
+                        var val = $(this).val();
+                        var endDate = $('#endDateAdd').val();
+                        var startDate = $('#startDateAdd').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (val < 0) {
+                                alert("Duration must be positive number!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                return false;
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() > val && count === 0) {
+
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() === val) {
+                                count = 0;
+                                $(':input[type="submit"]').prop('disabled', false);
+                            }
                         }
                     });
                     $('#startDateAdd').change(function (e) {
@@ -387,6 +653,52 @@ and open the template in the editor.
                             }
                         }
                     });
+                    $('#durationUpdate').change(function (e) {
+                        var val = $(this).val();
+                        var endDate = $('#endDateUpdate').val();
+                        var startDate = $('#startDateUpdate').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (val < 0) {
+                                alert("Duration must be positive number!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                return false;
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() > val && count === 0) {
+
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() == val) {
+                                count = 0;
+                                $(':input[type="submit"]').prop('disabled', false);
+                            }
+                        }
+                    });
+                    $('#priceDiscountUpdate').change(function (e) {
+                        var val = $(this).val();
+                        if (val > 100 || val < 0) {
+                            alert('Discount must be from 0 to 100!!!');
+                            $(':input[type="submit"]').attr('disabled', true);
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                        }
+                    });
+                    $('#priceUpdate').change(function (e) {
+                        var val = $(this).val();
+                        if (val > 10000 || val <= 0) {
+                            alert('Discount must be from 1 to 10000!!!');
+                            $(':input[type="submit"]').attr('disabled', true);
+                        } else {
+                            $(':input[type="submit"]').attr('disabled', false);
+                        }
+                    });
+
                     $('#startDateUpdate').change(function (e) {
                         var endDate = $('#endDateUpdate').val();
                         var startDate = $(this).val();
@@ -433,6 +745,79 @@ and open the template in the editor.
                             }
                         }
                     });
+                    $('#startDateReset').change(function (e) {
+                        var endDate = $('#endDateReset').val();
+                        var startDate = $(this).val();
+                        if (endDate !== '') {
+                            if (new Date(endDate).getYear() - new Date(startDate).getYear() !== 0) {
+                                alert('Start year and End year must be in same year');
+                                $(':input[type="submit"]').attr('disabled', true);
+                            } else {
+                                if (new Date(endDate).getMonth() - new Date(startDate).getMonth() !== 0) {
+                                    alert('Start month and End month must be in same month');
+                                    $(':input[type="submit"]').attr('disabled', true);
+                                } else {
+                                    if (new Date(endDate) <= new Date(startDate)) {
+                                        alert("Start date must be less than End date!!!");
+                                        $(':input[type="submit"]').attr('disabled', true);
+                                    }
+                                    if (new Date(endDate) > new Date(startDate)) {
+                                        $(':input[type="submit"]').prop('disabled', false);
+                                    }
+                                }
+                            }
+                        }
+                    })
+                    $('#endDateReset').change(function (e) {
+                        var endDate = $(this).val();
+                        var startDate = $('#startDateReset').val();
+                        if (startDate !== '') {
+                            if (new Date(endDate).getYear() - new Date(startDate).getYear() !== 0) {
+                                alert('Start year and End year must be in same year');
+                                $(':input[type="submit"]').attr('disabled', true);
+                            } else {
+                                if (new Date(endDate).getMonth() - new Date(startDate).getMonth() !== 0) {
+                                    alert('Start month and End month must be in same month');
+                                    $(':input[type="submit"]').attr('disabled', true);
+                                } else {
+                                    if (new Date(endDate) <= new Date(startDate)) {
+                                        alert("Start date must be less than End date!!!");
+                                        $(':input[type="submit"]').attr('disabled', true);
+                                    }
+                                    if (new Date(endDate) > new Date(startDate)) {
+                                        $(':input[type="submit"]').prop('disabled', false);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    $('#durationReset').change(function (e) {
+                        var val = $(this).val();
+                        var endDate = $('#endDateReset').val();
+                        var startDate = $('#startDateReset').val();
+                        if (endDate !== '' && startDate !== '') {
+                            if (val < 0) {
+                                alert("Duration must be positive number!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                                return false;
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() > val && count === 0) {
+
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() < val) {
+                                count++;
+                                alert("Duration must total of number of dates from " + startDate + " to " + endDate + "!!!");
+                                $(':input[type="submit"]').attr('disabled', true);
+                            }
+                            if (new Date(endDate).getDate() - new Date(startDate).getDate() == val) {
+                                count = 0;
+                                $(':input[type="submit"]').prop('disabled', false);
+                            }
+                        }
+                    });
                     /*<![CDATA[*/
                     var msg = /*[[${msg}]]*/;
                     /*]]>*/
@@ -443,6 +828,7 @@ and open the template in the editor.
                         e.stopPropagation();
                         e.stopImmediatePropagation();
                         $('#addModal .modal-content').find('#add').css('display', 'block');
+                        $('#reset .modal-content').find('#reset').css('display', 'none');
                         $('#updateModal .modal-content').find('#update').css('display', 'none');
                         $('#deleteModal .modal-content').find('#delete').css('display', 'none');
                         $('input[type=text]').val('');
@@ -482,12 +868,14 @@ and open the template in the editor.
                                 $('#tourTypeIdUpdate option:contains(' + list.tourTypeId.name + ')').attr('selected', 'selected');
                                 $('#guideIdUpdate option:contains(' + list.guideId.userId.name + ')').attr('selected', 'selected');
                                 $('#imageUrlUpdate').val(list.tourImageCover);
-                                $('#imageCoverUpdate').attr('src', "/images/" + list.tourImageCover);
+                                $('#imageCoverUpdate').attr('src', "" + list.tourImageCover);
                                 $('#durationUpdate').val(list.duration);
                                 $('#maxGroupSizeUpdate').val(list.maxGroupSize);
+                                $('#currentGroupSize').val(list.currentGroupSize);
                                 $('#priceDiscountUpdate').val(list.priceDiscount);
                                 $('#priceUpdate').val(list.price);
                                 $('#updateModal .modal-content').find('#update').css('display', 'block');
+                                $('#reset .modal-content').find('#reset').css('display', 'none');
                                 $('#addModal .modal-content').find('#add').css('display', 'none');
                                 $('#deleteModal .modal-content').find('#delete').css('display', 'none');
                                 $('#updateModal').modal('show');
@@ -507,6 +895,7 @@ and open the template in the editor.
                         e.stopPropagation();
                         e.stopImmediatePropagation();
                         $('#delete .modal-content').find('#delete').css('display', 'block');
+                        $('#reset .modal-content').find('#reset').css('display', 'none');
                         $('#addModal .modal-content').find('#add').css('display', 'none');
                         $('#updateModal .modal-content').find('#update').css('display', 'none');
                         var spans = $(this).closest("tr").find("span");
@@ -522,6 +911,52 @@ and open the template in the editor.
                             var title = $('#delete').closest('div').find('h3').html('Active Tour');
                             $('#activeText').html('active');
                             $('#deleteModal').modal('show');
+                        }
+                    });
+                    $(".reset").on('click', function (e) {
+                        e.stopPropagation();
+                        e.stopImmediatePropagation();
+                        var origin = window.location.origin;
+                        //Fill data
+                        var spans = $(this).closest("tr").find("span");
+                        var id = spans.eq(0).text();
+                        var checked = $(this).closest("div").find(".delete:visible").text();
+                        if (checked === "Deactive") {
+                            alert("Can't reset tour when tour active!!!");
+                            return false;
+                        } else {
+                            $('#idActive').val(spans.eq(0).text());
+                            $.ajax({
+                                url: origin + "/admin/tours/" + id,
+                                type: 'GET',
+                                crossDomain: true,
+                                dataType: 'json',
+                                contentType: 'application/json',
+                                success: function (data) {
+                                    //called when successful
+                                    var result = JSON.stringify(data);
+                                    var list = JSON.parse(result);
+                                    $('#idReset').val(list.id);
+                                    $('#nameReset').val(list.name);
+                                    $('#startDateReset').val('');
+                                    $('#endDateReset').val('');
+                                    $('#currentGroupSizeReset').val(0);
+                                    $('#durationReset').val(0);
+                                    $('#reset .modal-content').find('#reset').css('display', 'block');
+                                    $('#delete .modal-content').find('#delete').css('display', 'none');
+                                    $('#addModal .modal-content').find('#add').css('display', 'none');
+                                    $('#updateModal .modal-content').find('#update').css('display', 'none');
+                                    $('#resetModal').modal('show');
+                                    $('#resetModal').on('shown.bs.modal', function (event) {
+                                        // reset the scroll to top
+                                        $('#resetModal .modal-body').scrollTop(0);
+                                    });
+                                },
+                                error: function (e) {
+                                    //called when there is an error
+                                    console.log(e.message);
+                                }
+                            });
                         }
                     });
                     $('input[type=text]').closest('#imageUrlUpdate').click(function (e) {
@@ -580,7 +1015,8 @@ and open the template in the editor.
                             reader.readAsDataURL(input.files[0]);
                         }
                     }
-                });
+                }
+                );
             </script>
         </div>
         <!--Table-->
@@ -599,7 +1035,7 @@ and open the template in the editor.
                                     <th rowspan="2" style="color:#76C06C ">Name</th>
                                     <th colspan="2" style="color:#76C06C ">Date</th>
                                     <th rowspan="2" style="width: 10%;color:#76C06C">Active</th>
-                                    <th rowspan="2" style="color:#76C06C ">Action</th>
+                                    <th rowspan="2" style="color:#76C06C ;width: 12%">Action</th>
                                 </tr>
                                 <tr>
                                     <th style="color:#76C06C ">Start Date</th>
@@ -622,17 +1058,19 @@ and open the template in the editor.
                                     <td style="color:#76C06C "><span class="" th:text="${tour.name}"></span></td>
                                     <td style="color:#76C06C "><span th:text="${tour.startDate}"></span></td>
                                     <td style="color:#76C06C "><span th:text="${tour.endDate}"></span></td>
-                                    <td style="color:#76C06C "><input class="ch" type="checkbox" th:checked="${tour.getActive()}?'true':'false'"/></td>
-                                    <td style="color:#76C06C  " class="button-update update">
+                                    <td style="color:#76C06C "><input class="ch" type="checkbox" disabled="true" th:checked="${tour.getActive()}?'true':'false'"/></td>
+                                    <td style="color:#76C06C">
                                         <div style="display: inline-block">
                                             <button
-                                                id="updateBtn" class="update" style="border: 1px solid;border-radius: 8px;background: #007bff;color: white" th:data-id="${tour.id}" >Update</button>
+                                                id="updateBtn" class="update" style="border: 1px solid;border-radius: 8px;width: 80px;;background: #007bff;color: white" th:data-id="${tour.id}" >Update</button>
+                                            <button
+                                                id="resetBtn" class="reset" style="border: 1px solid;border-radius: 8px;width: 80px;;background: #007bff;color: white" th:data-id="${tour.id}" >Reset</button>
                                             <button
                                                 id="activeBtn" data-href=""
                                                 class="button-delete delete" th:hidden="${tour.getActive()}?'false':'true'" style="text-align: center;width: 80px;border: 1px solid;border-radius: 8px;background: red;color: white" th:data-id="${tour.id}">Deactive</button>
                                             <button
                                                 id="activeBtn" data-href=""
-                                                class="button-delete delete" th:hidden="${tour.getActive()}?'true':'false'" style="text-align: center;width: 75px;border: 1px solid;border-radius: 8px;background: green;color: white" th:data-id="${tour.id}">Active</button>
+                                                class="button-delete delete" th:hidden="${tour.getActive()}?'true':'false'" style="text-align: center;width: 80px;border: 1px solid;border-radius: 8px;background: green;color: white" th:data-id="${tour.id}">Active</button>
 
                                         </div>
                                     </td>
