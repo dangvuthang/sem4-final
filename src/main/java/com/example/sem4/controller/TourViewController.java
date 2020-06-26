@@ -100,7 +100,7 @@ public class TourViewController {
         try {
             if (file.getOriginalFilename() != null) {
                 Map result = cloudinaryService.upload(file);
-                String imageName = (String) result.get("url");
+                String imageName = (String) result.get("secure_url");
                 tour.setTourImageCover(imageName);
             }
             for (Tour t : tourRepository.findAll()) {
@@ -146,7 +146,7 @@ public class TourViewController {
             if (!tour.getTourImageCover().contains("http")) {
                 if (file.getOriginalFilename() != null) {
                     Map result = cloudinaryService.upload(file);
-                    String imageName = (String) result.get("url");
+                    String imageName = (String) result.get("secure_url");
                     tour.setTourImageCover(imageName);
                 }
                 Tour currentTour = tourRepository.findById(tour.getId()).get();

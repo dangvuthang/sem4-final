@@ -65,7 +65,7 @@ public class TourImageViewController {
         try {
             if (file.getOriginalFilename() != null) {
                 Map result = cloudinaryService.upload(file);
-                String imageName = (String) result.get("url");
+                String imageName = (String) result.get("secure_url");
                 tourImage.setImageUrl(imageName);
             }
             if (tourImageRepository.save(tourImage) != null) {
@@ -87,7 +87,7 @@ public class TourImageViewController {
             if (!tourImage.getImageUrl().contains("http")) {
                 if (file.getOriginalFilename() != null) {
                     Map result = cloudinaryService.upload(file);
-                    String imageName = (String) result.get("url");
+                    String imageName = (String) result.get("secure_url");
                     tourImage.setImageUrl(imageName);
                 }
                 TourImage currentTourImage = tourImageRepository.findById(tourImage.getId()).get();

@@ -135,12 +135,12 @@ and open the template in the editor.
                                     <input type="text" readonly="true" id="addressUpdate" name="address" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
-                                    <label style="color:#76C06C" th:for="longitude">Latitude</label>
-                                    <input type="number" readonly="true" id="longitudeUpdate" name="longitude" class="form-control" required/>
+                                    <label style="color:#76C06C" th:for="longitude">Longitude</label>
+                                    <input type="text" readonly="true" id="longitudeUpdate" name="longitude" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
-                                    <label style="color:#76C06C" th:for="latitude">Longitude</label>
-                                    <input type="number" readonly="true" id="latitudeUpdate" name="latitude" class="form-control" required/>
+                                    <label style="color:#76C06C" th:for="latitude">Latitude</label>
+                                    <input type="text" readonly="true" id="latitudeUpdate" name="latitude" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" id="activeUpdate" name="isActive" class="form-control" value="true" hidden="true">
@@ -171,15 +171,15 @@ and open the template in the editor.
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="address">Address</label>
-                                    <input type="text" readonly="true" id="addressAdd" name="address" class="form-control" required/>
+                                    <input type="text" id="addressAdd" name="address" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
-                                    <label style="color:#76C06C" th:for="longitude">Latitude</label>
-                                    <input type="number" readonly="true" id="longitudeAdd" name="longitude" class="form-control" required/>
+                                    <label style="color:#76C06C" th:for="longitude">Longitude</label>
+                                    <input type="text" id="longitudeAdd" name="longitude" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
-                                    <label style="color:#76C06C" th:for="latitude">Longitude</label>
-                                    <input type="number" readonly="true" id="latitudeAdd" name="latitude" class="form-control" required/>
+                                    <label style="color:#76C06C" th:for="latitude">Latitude</label>
+                                    <input type="text" id="latitudeAdd" name="latitude" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" id="activeAdd" name="isActive" class="form-control" value="true" hidden="true">
@@ -196,12 +196,94 @@ and open the template in the editor.
             <!--End Modal Add-->
 
             <script type="text/javascript" th:inline='javascript'>
-                function submit() {
-                    alert('Hi');
-                }
+
+
                 $(document).ready(function (e) {
 
+                    
+                    $('#addForm').submit(function (e) {
+                        var count = 0;
+                        var regex = new RegExp('^([a-zA-Z]+[\\W\\s]*)+$');
+                        var regex2 = new RegExp('^[0-9]{2,3}\\.[0-9]{1,2}$');
+                        if (!regex.test($("#nameAdd").val())) {
+                            alert('Name must be alphabet')
+                            count++;
+                        } else if ($("#nameAdd").val().trim().length > 30) {
+                            alert('Name must be from 0 to 30 characters')
+                        }else{
+                            count=0;
+                        }
+                        if (!regex.test($("#addressAdd").val())) {
+                            alert('Address must be alphabet');
+                            count++;
+                        } else if ($("#addressAdd").val().trim().length > 30) {
+                            alert('Address must be from 0 to 30 characters')
+                        }else{
+                            count=0;
+                        }
+                        if ($("#latitudeAdd").val().length > 10) {
+                            alert('Latitude must be from 0 to 10 characters');
+                            count++;
+                        } else if (!regex2.test($("#latitudeAdd").val())) {
+                            alert('Latitude must be format: xxx.xx');
+                            count++;
+                        } else{
+                            count=0;
+                        }
+                        if ($("#longitudeAdd").val().length > 10) {
+                            alert('Longitude must be from 0 to 10 characters');
+                            count++;
+                        } else if (!regex2.test($("#longitudeAdd").val())) {
+                            alert('Longitude must be format: xxx.xx');
+                            count++;
+                        } else {
+                            count = 0;
+                        }
+                        if (count > 0) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    });
+                    $('#updateForm').submit(function (e) {
+                        var regex = new RegExp('^([a-zA-Z]+[\\w\\s]*)+$');
+                        var count = 0;
+                        if (regex.test($("#nameUpdate").val())) {
+                            alert('Name must be alphabet')
+                            count++;
+                        } else if ($("#nameUpdate").val().trim().length > 30) {
+                            alert('Name must be from 0 to 30 characters')
+                        }
+                        if (regex.test($("#addressUpdate").val())) {
+                            alert('Address must be alphabet');
+                            count++;
+                        } else if ($("#addressUpdate").val().trim().length > 30) {
+                            alert('Address must be from 0 to 30 characters')
+                        }
+                        if ($("#latitudeUpdate").val().length > 10) {
+                            alert('Latitude must be from 0 to 10 characters and format:xxx.xx');
+                            count++;
+                        } else if (('^[0-9]{3}\\.[0-9]{2}$').test($("#latitudeUpdate").val())) {
+                            alert('Latitude must be format:xxx.xx');
+                            count++;
+                        } else {
 
+                        }
+                        if ($("#longitudeUpdate").val().length > 10) {
+                            alert('Longitude must be from 0 to 10 characters');
+                            count++;
+                        } else if (('^[0-9]{3}\\.[0-9]{2}$').test($("#longitudeUpdate").val())) {
+                            alert('Longitude must be format:xxx.xx');
+                            count++;
+                        } else {
+
+                        }
+                        if (count == 0) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    });
 
                     /*<![CDATA[*/
                     var msg = /*[[${msg}]]*/;
@@ -241,90 +323,100 @@ and open the template in the editor.
                             $('#myModal .modal-body').scrollTop(0);
                         });
                     });
-                    $("#nameUpdate").on('keyup', function (e) {
-                        var regex = new RegExp('^([a-zA-Z]+\\s*)+$');
-                        var address = $(this).val();
-                        if (regex.test(address)) {
-                            $('#validateUpdate').html('');
-                            $.ajax({
-                                url: "http://www.datasciencetoolkit.org/maps/api/geocode/json?address=" + address + "&sensor=false",
-                                type: 'GET',
-                                crossDomain: true,
-                                dataType: 'jsonp',
-                                contentType: 'application/json',
-                                success: function (data) {
-                                    //called when successful
-                                    if (data === null) {
-                                        $('#addressUpdate').val("No address found");
-                                    }
-                                    var result = JSON.stringify(data);
-                                    var list = JSON.parse(result);
-                                    $('#latitudeUpdate').val(list.results[0].geometry.location.lat);
-                                    $('#longitudeUpdate').val(list.results[0].geometry.location.lng);
-                                    if (list.results[0].formatted_address !== null) {
-                                        $('#addressUpdate').val(list.results[0].formatted_address);
-                                    }
-                                    $('#addressUpdate').val(list.results[0].address_components[0].long_name)
-                                },
-                                error: function (e) {
-                                    $('#addressUpdate').val("No address found");
-                                }
-                            });
-                        } else if (address === '') {
-
-                            $('#latitudeUpdate').val('');
-                            $('#longitudeUpdate').val('');
-                            $('#addressUpdate').val('');
-                        } else {
-                            $('#validateUpdate').css('display', 'block');
-                            $('#validateUpdate').html('Name must be alphabet');
-                            $('#latitudeUpdate').val('');
-                            $('#longitudeUpdate').val('');
-                            $('#addressUpdate').val('');
-                        }
-                    });
-                    $("#nameAdd").on('keyup', function (e) {
-                        var regex = new RegExp('^([a-zA-Z]+\\s*)+$');
-                        var address = $(this).val();
-                        if (regex.test(address)) {
-                            $('#validateAdd').html('');
-                            $.ajax({
-                                url: "http://www.datasciencetoolkit.org/maps/api/geocode/json?address=" + address + "&sensor=false",
-                                type: 'GET',
-                                crossDomain: true,
-                                dataType: 'jsonp',
-                                contentType: 'application/json',
-                                success: function (data) {
-                                    if (data === null) {
-                                        $('#addressUpdate').val("No address found");
-                                    }
-                                    //called when successful
-                                    var result = JSON.stringify(data);
-                                    var list = JSON.parse(result);
-                                    $('#latitudeAdd').val(list.results[0].geometry.location.lat);
-                                    $('#longitudeAdd').val(list.results[0].geometry.location.lng);
-                                    if (list.results[0].formatted_address !== null) {
-                                        $('#addressAdd').val(list.results[0].formatted_address)
-                                    }
-                                    $('#addressAdd').val(list.results[0].address_components[0].long_name)
-                                },
-                                error: function (e) {
-                                    $('#addressUpdate').val("No address found");
-                                }
-                            });
-                        } else if (address === '') {
-
-                            $('#latitudeUpdate').val('');
-                            $('#longitudeUpdate').val('');
-                            $('#addressUpdate').val('');
-                        } else {
-                            $('#validateAdd').css('display', 'block');
-                            $('#validateAdd').html('Name must be alphabet');
-                            $('#latitudeUpdate').val('');
-                            $('#longitudeUpdate').val('');
-                            $('#addressUpdate').val('');
-                        }
-                    });
+//                    $("#nameUpdate").on('keyup', function (e) {
+//                        var regex = new RegExp('^([a-zA-Z]+\\s*)+$');
+//                        var address = $(this).val();
+//                        if (regex.test(address)) {
+//                            $('#validateUpdate').html('');
+//                            $.ajax({
+//                                url: "https://maps.googleapis.com/maps/api/geocode/json",
+//
+//                                data: {
+//                                    sensor: false,
+//                                    address: address,
+//                                    key: "AIzaSyDzJVD9Qem58RbNqRh0VKf5icdllgc7LJw",
+//                                }, headers: {
+//                                    'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'}
+//                                , type: 'GET',
+//                                crossDomain: true,
+//                                dataType: 'jsonp',
+//                                success: function (data) {
+//                                    //called when successful
+//                                    if (data === null) {
+//                                        $('#addressUpdate').val("No address found");
+//                                    }
+//                                    var result = JSON.stringify(data);
+//                                    var list = JSON.parse(result);
+//                                    $('#latitudeUpdate').val(list.results[0].geometry.location.lat);
+//                                    $('#longitudeUpdate').val(list.results[0].geometry.location.lng);
+//                                    if (list.results[0].formatted_address !== null) {
+//                                        $('#addressUpdate').val(list.results[0].formatted_address);
+//                                    }
+//                                    $('#addressUpdate').val(list.results[0].address_components[0].long_name)
+//                                },
+//                                error: function (e) {
+//                                    $('#addressUpdate').val("No address found");
+//                                }
+//                            });
+//                        } else if (address === '') {
+//
+//                            $('#latitudeUpdate').val('');
+//                            $('#longitudeUpdate').val('');
+//                            $('#addressUpdate').val('');
+//                        } else {
+//                            $('#validateUpdate').css('display', 'block');
+//                            $('#validateUpdate').html('Name must be alphabet');
+//                            $('#latitudeUpdate').val('');
+//                            $('#longitudeUpdate').val('');
+//                            $('#addressUpdate').val('');
+//                        }
+//                    });
+//                    $("#nameAdd").on('keyup', function (e) {
+//                        var regex = new RegExp('^([a-zA-Z]+\\s*)+$');
+//                        var address = $(this).val();
+//                        if (regex.test(address)) {
+//                            $('#validateAdd').html('');
+//                            $.ajax({
+//                                url: "https://maps.googleapis.com/maps/api/geocode/json",
+//
+//                                data: {
+//                                    sensor: false,
+//                                    address: address,
+//                                    key: "AIzaSyDzJVD9Qem58RbNqRh0VKf5icdllgc7LJw",
+//                                }, type: 'GET',
+//                                crossDomain: true,
+//                                dataType: 'jsonp',
+//                                success: function (data) {
+//                                    if (data === null) {
+//                                        $('#addressUpdate').val("No address found");
+//                                    }
+//                                    //called when successful
+//                                    var result = JSON.stringify(data);
+//                                    var list = JSON.parse(result);
+//                                    $('#latitudeAdd').val(list.results[0].geometry.location.lat);
+//                                    $('#longitudeAdd').val(list.results[0].geometry.location.lng);
+//                                    if (list.results[0].formatted_address !== null) {
+//                                        $('#addressAdd').val(list.results[0].formatted_address)
+//                                    }
+//                                    $('#addressAdd').val(list.results[0].address_components[0].long_name)
+//                                },
+//                                error: function (e) {
+//                                    $('#addressUpdate').val("No address found");
+//                                }
+//                            });
+//                        } else if (address === '') {
+//
+//                            $('#latitudeUpdate').val('');
+//                            $('#longitudeUpdate').val('');
+//                            $('#addressUpdate').val('');
+//                        } else {
+//                            $('#validateAdd').css('display', 'block');
+//                            $('#validateAdd').html('Name must be alphabet');
+//                            $('#latitudeUpdate').val('');
+//                            $('#longitudeUpdate').val('');
+//                            $('#addressUpdate').val('');
+//                        }
+//                    });
                     $(".delete").on('click', function (e) {
                         e.stopPropagation();
                         e.stopImmediatePropagation();
