@@ -253,7 +253,6 @@ and open the template in the editor.
                         } else if ($("#nameUpdate").val().trim().length > 30) {
                             alert('Name must be from 0 to 30 characters')
                         } else {
-                            count = 0;
                         }
                         if (!regex.test($("#addressUpdate").val())) {
                             alert('Address must be alphabet');
@@ -261,7 +260,6 @@ and open the template in the editor.
                         } else if ($("#addressUpdate").val().trim().length > 30) {
                             alert('Address must be from 0 to 30 characters')
                         } else {
-                            count = 0;
                         }
                         if ($("#latitudeUpdate").val().length > 10) {
                             alert('Latitude must be from 0 to 10 characters');
@@ -270,7 +268,6 @@ and open the template in the editor.
                             alert('Latitude must be format: xxx.xx');
                             count++;
                         } else {
-                            count = 0;
                         }
                         if ($("#longitudeUpdate").val().length > 10) {
                             alert('Longitude must be from 0 to 10 characters');
