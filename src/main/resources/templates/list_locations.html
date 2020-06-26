@@ -132,15 +132,15 @@ and open the template in the editor.
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="address">Address</label>
-                                    <input type="text" readonly="true" id="addressUpdate" name="address" class="form-control" required/>
+                                    <input type="text" id="addressUpdate" name="address" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="longitude">Longitude</label>
-                                    <input type="text" readonly="true" id="longitudeUpdate" name="longitude" class="form-control" required/>
+                                    <input type="text" id="longitudeUpdate" name="longitude" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
                                     <label style="color:#76C06C" th:for="latitude">Latitude</label>
-                                    <input type="text" readonly="true" id="latitudeUpdate" name="latitude" class="form-control" required/>
+                                    <input type="text" id="latitudeUpdate" name="latitude" class="form-control" required/>
                                 </div>
                                 <div class="form-group">
                                     <input type="text" id="activeUpdate" name="isActive" class="form-control" value="true" hidden="true">
@@ -200,9 +200,9 @@ and open the template in the editor.
 
                 $(document).ready(function (e) {
 
-                    
+                    var count = 0;
+
                     $('#addForm').submit(function (e) {
-                        var count = 0;
                         var regex = new RegExp('^([a-zA-Z]+[\\W\\s]*)+$');
                         var regex2 = new RegExp('^[0-9]{2,3}\\.[0-9]{1,2}$');
                         if (!regex.test($("#nameAdd").val())) {
@@ -210,16 +210,16 @@ and open the template in the editor.
                             count++;
                         } else if ($("#nameAdd").val().trim().length > 30) {
                             alert('Name must be from 0 to 30 characters')
-                        }else{
-                            count=0;
+                        } else {
+                            count = 0;
                         }
                         if (!regex.test($("#addressAdd").val())) {
                             alert('Address must be alphabet');
                             count++;
                         } else if ($("#addressAdd").val().trim().length > 30) {
                             alert('Address must be from 0 to 30 characters')
-                        }else{
-                            count=0;
+                        } else {
+                            count = 0;
                         }
                         if ($("#latitudeAdd").val().length > 10) {
                             alert('Latitude must be from 0 to 10 characters');
@@ -227,8 +227,8 @@ and open the template in the editor.
                         } else if (!regex2.test($("#latitudeAdd").val())) {
                             alert('Latitude must be format: xxx.xx');
                             count++;
-                        } else{
-                            count=0;
+                        } else {
+                            count = 0;
                         }
                         if ($("#longitudeAdd").val().length > 10) {
                             alert('Longitude must be from 0 to 10 characters');
@@ -240,48 +240,50 @@ and open the template in the editor.
                             count = 0;
                         }
                         if (count > 0) {
-                            return false;
+                            e.preventDefault();
                         } else {
-                            return true;
                         }
                     });
                     $('#updateForm').submit(function (e) {
-                        var regex = new RegExp('^([a-zA-Z]+[\\w\\s]*)+$');
-                        var count = 0;
-                        if (regex.test($("#nameUpdate").val())) {
+                        var regex = new RegExp('^([a-zA-Z]+[\\W\\s]*)+$');
+                        var regex2 = new RegExp('^[0-9]{2,3}\\.[0-9]{1,2}$');
+                        if (!regex.test($("#nameUpdate").val())) {
                             alert('Name must be alphabet')
                             count++;
                         } else if ($("#nameUpdate").val().trim().length > 30) {
                             alert('Name must be from 0 to 30 characters')
+                        } else {
+                            count = 0;
                         }
-                        if (regex.test($("#addressUpdate").val())) {
+                        if (!regex.test($("#addressUpdate").val())) {
                             alert('Address must be alphabet');
                             count++;
                         } else if ($("#addressUpdate").val().trim().length > 30) {
                             alert('Address must be from 0 to 30 characters')
+                        } else {
+                            count = 0;
                         }
                         if ($("#latitudeUpdate").val().length > 10) {
-                            alert('Latitude must be from 0 to 10 characters and format:xxx.xx');
+                            alert('Latitude must be from 0 to 10 characters');
                             count++;
-                        } else if (('^[0-9]{3}\\.[0-9]{2}$').test($("#latitudeUpdate").val())) {
-                            alert('Latitude must be format:xxx.xx');
+                        } else if (!regex2.test($("#latitudeUpdate").val())) {
+                            alert('Latitude must be format: xxx.xx');
                             count++;
                         } else {
-
+                            count = 0;
                         }
                         if ($("#longitudeUpdate").val().length > 10) {
                             alert('Longitude must be from 0 to 10 characters');
                             count++;
-                        } else if (('^[0-9]{3}\\.[0-9]{2}$').test($("#longitudeUpdate").val())) {
-                            alert('Longitude must be format:xxx.xx');
+                        } else if (!regex2.test($("#longitudeUpdate").val())) {
+                            alert('Longitude must be format: xxx.xx');
                             count++;
                         } else {
-
+                            count = 0;
                         }
-                        if (count == 0) {
-                            return true;
+                        if (count > 0) {
+                            e.preventDefault();
                         } else {
-                            return false;
                         }
                     });
 
