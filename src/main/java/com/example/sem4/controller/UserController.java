@@ -75,7 +75,7 @@ public class UserController {
     currentUser.setPhone(model.getPhone());
     if (model.getAvatarImage() != null) {
       Map result = cloudinaryService.upload(model.getAvatarImage());
-      String imageName = (String) result.get("url");
+      String imageName = (String) result.get("secure_url");
       currentUser.setAvatarImage(imageName);
     }
     User updatedUser = userRepository.save(currentUser);
@@ -199,7 +199,7 @@ public class UserController {
     if (model.getAvatarImage() != null) {
 //      Save image to cloudinary
       Map result = cloudinaryService.upload(model.getAvatarImage());
-      imageName = (String) result.get("url");
+      imageName = (String) result.get("secure_url");
     }
     User u = new User();
     u.setEmail(model.getEmail());
