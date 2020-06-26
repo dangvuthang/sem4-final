@@ -266,7 +266,7 @@ and open the template in the editor.
                                 <tr th:each="bookings : ${list}">
                                     <td style="color:#76C06C"><span class="" th:text="${bookings.id}"></span></td>
                                     <td style="color:#76C06C "><span class="" th:text="${bookings.getTourId().getName()}"></span></td>
-                                   <td style="color:#76C06C "><input class="ch" type="checkbox" th:checked="${bookings.getIsCancelled()}?'true':'false'"/></td>
+                                   <td style="color:#76C06C "><input class="ch" type="checkbox" th:checked="${bookings.isIsCancelled()}?'true':'false'"/></td>
                                     <td style="color:#76C06C "><span class="" th:text="${bookings.price}"></span></td>
                                     <td style="color:#76C06C "><span class="" th:text="${bookings.quantity}"></span></td>
                                     <td style="color:#76C06C "><span class="" th:text="${bookings.createdAt}"></span></td>
